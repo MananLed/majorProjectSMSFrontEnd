@@ -1,0 +1,143 @@
+<div class="heading">
+  <h1>UpKeepz</h1>
+  <p>Smart Maintenance System</p>
+</div>
+
+<div class="page-wrapper">
+  <p-card class="card-container">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0">Login</p-tab>
+        <p-tab value="1">Sign Up</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <div class="form-wrapper">
+            <p-floatlabel variant="on" class="form-field">
+              <input
+                pInputText
+                id="Email"
+                [(ngModel)]="email"
+                autocomplete="off"
+              />
+              <label for="Email">Email<span class="required">*</span></label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="form-field">
+              <input
+                pInputText
+                id="Password"
+                [(ngModel)]="password"
+                autocomplete="off"
+              />
+              <label for="Password"
+                >Password<span class="required">*</span></label
+              >
+            </p-floatlabel>
+
+            <p-button label="Login" (onClick)="onLogin()"></p-button>
+          </div>
+        </p-tabpanel>
+
+        <p-tabpanel value="1">
+          <div class="row">
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="firstName"
+                [(ngModel)]="firstName"
+                autocomplete="off"
+              />
+              <label for="firstName"
+                >First Name<span class="required">*</span></label
+              >
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="middleName"
+                [(ngModel)]="middleName"
+                autocomplete="off"
+              />
+              <label for="middleName">Middle Name</label>
+            </p-floatlabel>
+          </div>
+
+          <div class="row">
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="lastName"
+                [(ngModel)]="lastName"
+                autocomplete="off"
+              />
+              <label for="lastName"
+                >Last Name<span class="required">*</span></label
+              >
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="mobile"
+                [(ngModel)]="mobile"
+                autocomplete="off"
+              />
+              <label for="mobile"
+                >Mobile Number<span class="required">*</span></label
+              >
+            </p-floatlabel>
+          </div>
+          <div class="row">
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="email"
+                [(ngModel)]="email"
+                autocomplete="off"
+              />
+              <label for="lastName">Email<span class="required">*</span></label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="flat"
+                [(ngModel)]="flat"
+                autocomplete="off"
+              />
+              <label for="mobile">Flat<span class="required">*</span></label>
+            </p-floatlabel>
+          </div>
+          <div class="row">
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="password"
+                [(ngModel)]="password"
+                autocomplete="off"
+              />
+              <label for="lastName"
+                >Password<span class="required">*</span></label
+              >
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="confirmpassword"
+                [(ngModel)]="confirmPassword"
+                autocomplete="off"
+              />
+              <label for="mobile"
+                >Confirm Password<span class="required">*</span></label
+              >
+            </p-floatlabel>
+          </div>
+          <p-button label="Sign Up" (onClick)="onRegister()"></p-button>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </p-card>
+</div>

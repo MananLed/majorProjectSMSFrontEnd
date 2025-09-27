@@ -1,0 +1,57 @@
+<div class="users">
+  <div class="residents">
+    <h3>Total Residents</h3>
+    <div class="resident-count"></div>
+  </div>
+  <div class="officers">
+    <h3>Total Officers</h3>
+    <div class="officer-count"></div>
+  </div>
+</div>
+<br /><br /><br />
+
+<div class="page-wrapper">
+  <p-card class="card-container">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0">Residents</p-tab>
+        <p-tab value="1">Officers</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <p-table stripedRows [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+              <tr>
+                <th>ID</th>
+                <th>Firstname</th>
+                <th>Middlename</th>
+                <th>Lastname</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Flat</th>
+                <th>Actions</th>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabpanel>
+
+        <p-tabpanel value="1">
+            <p-button label="+ Add Officer"/>
+          <p-table stripedRows [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+              <tr>
+                <th>ID</th>
+                <th>Firstname</th>
+                <th>Middlename</th>
+                <th>Lastname</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </p-card>
+</div>

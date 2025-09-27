@@ -1,0 +1,61 @@
+.heading{
+    border: 1px solid aliceblue;
+    border-radius: 6px;
+    background-color: aliceblue;
+}
+
+.service-status{
+    display: flex;
+    gap: 4px;
+}
+
+.people{
+    display: flex;
+    gap: 4px;
+}
+
+.pending{
+    border: 1px solid aliceblue;
+    border-radius: 6px;
+    background-color: aliceblue;
+    width: 48%;
+}
+
+.approved{
+    border: 1px solid aliceblue;
+    border-radius: 6px;
+    background-color: aliceblue;
+    width: 48%;
+}
+
+.residents{
+    margin-top: 70px;
+    border: 1px solid aliceblue;
+    border-radius: 6px;
+    background-color: aliceblue;
+    width: 48%;
+}
+
+.officers{
+    margin-top: 70px;
+    border: 1px solid aliceblue;
+    border-radius: 6px;
+    background-color: aliceblue;
+    width: 48%;
+}
+h5{
+    margin-left: 6px;
+}
+h3{
+    margin-left: 6px;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: #f8f9fa;
+  position: fixed;
+  left: 0;
+  padding: 1rem;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}

@@ -1,0 +1,61 @@
+<div class="requests">
+  <div class="total">
+    <h3>Total Requests</h3>
+    <div class="total-count"></div>
+  </div>
+  <div class="pending">
+    <h3>Pending Requests</h3>
+    <div class="pending-count"></div>
+  </div>
+  <div class="approved">
+    <h3>Approved Requests</h3>
+    <div class="approved-count"></div>
+  </div>
+</div>
+
+<div class="filter-requests">
+  <p><b>Filter Requests</b></p>
+  <div class="bar">
+    <p-autocomplete
+      [(ngModel)]="selectedItem"
+      [virtualScroll]="true"
+      [suggestions]="filteredItems"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterItems($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      placeholder="Service Type"
+    />
+    <p-autocomplete
+      [(ngModel)]="selectedItem"
+      [virtualScroll]="true"
+      [suggestions]="filteredItems"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterItems($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      placeholder="Status"
+    />
+    <p-button label="Search" icon="pi pi-search"/>
+  </div>
+</div> 
+
+<br><br><br>
+<div class="card">
+    <p-table stripedRows [tableStyle]="{'min-width': '50rem'}">
+        <ng-template #header>
+            <tr>
+                <th>Request ID</th>
+                <th>Resident ID</th>
+                <th>Status</th>
+                <th>Time Slot</th>
+                <th>Service Type</th>
+                <th>Flat</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+
+

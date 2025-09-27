@@ -1,0 +1,53 @@
+.requests{
+    display: flex;
+    gap: 8px;
+}
+
+
+.total{
+    border: 1px solid aliceblue;
+    border-radius: 6px;
+    background-color: aliceblue;
+    width: 30%;
+    height: 90px;
+}
+
+.approved{
+    border: 1px solid aliceblue;
+    border-radius: 6px;
+    background-color: aliceblue;
+    width: 30%;
+}
+
+.pending{
+    border: 1px solid aliceblue;
+    border-radius: 6px;
+    background-color: aliceblue;
+    width: 30%;
+}
+
+h3{
+    margin-left: 4px;
+    margin-top: 30px;
+}
+
+.filter-requests{
+    margin-top: 60px;
+    width: fit-content;
+    height: 160px;
+    border-radius: 6px;
+    padding: 2%;
+    background-color: aliceblue;
+}
+
+.bar{
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+}
+
+:host ::ng-deep .p-button{
+    background-color: aliceblue;
+    color: black;
+}
+

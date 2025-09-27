@@ -1,0 +1,18 @@
+.users{
+    display: flex;
+    gap: 4px;
+}
+
+.residents, .officers{
+    margin-top: 70px;
+    border: 1px solid aliceblue;
+    border-radius: 6px;
+    background-color: aliceblue;
+    width: 48%;
+    height: 80px;
+}
+
+h3{
+    margin-left: 4px;
+    margin-top: 25px;
+}

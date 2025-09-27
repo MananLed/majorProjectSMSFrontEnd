@@ -1,0 +1,7 @@
+<p>pipe works!</p>
+
+<main>
+    <h1>Purchases from {{company | titlecase}} on {{purchasedOn | date:'hh:mm':'UTC'}}</h1>
+    <p>Total: {{ amount | currency }}</p>
+    <p>{{amount | convertCurrency:'USD':'INR':82.5}}</p>
+</main>

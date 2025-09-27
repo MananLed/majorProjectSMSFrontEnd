@@ -1,0 +1,31 @@
+.buttons{
+    display: flex;
+    gap: 6px;
+    margin-top: 148px;
+    justify-content: right;   
+}
+
+.profile{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border: 2px solid aliceblue;
+    background-color: aliceblue;
+    gap: 28px;
+    width: 1100px;
+    margin-left: 420px;
+    margin-top: 70px;
+    border-radius: 6px;
+}
+
+.detail{
+    border-radius: 6px;
+    border: 1px solid black;
+    width: 340px;
+    height: 40px;
+}
+.edetail{
+    border-radius: 6px;
+    border: 1px solid black;
+    width: 540px;
+    height: 40px;
+}

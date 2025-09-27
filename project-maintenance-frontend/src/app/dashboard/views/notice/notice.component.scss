@@ -1,0 +1,19 @@
+.filter-requests{
+    margin-top: 60px;
+    width: fit-content;
+    height: 200px;
+    border-radius: 6px;
+    padding: 2%;
+    background-color: aliceblue;
+}
+
+.bar{
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+}
+
+:host ::ng-deep .p-button{
+    background-color: aliceblue;
+    color: black;
+}

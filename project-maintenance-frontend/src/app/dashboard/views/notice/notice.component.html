@@ -1,0 +1,72 @@
+<div class="filter-requests">
+  <p><b>Search Notice</b></p>
+  <div class="bar">
+    <p-autocomplete
+      [(ngModel)]="selectedItem"
+      [virtualScroll]="true"
+      [suggestions]="filteredItems"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterItems($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      placeholder="Select Month"
+    />
+    <p-autocomplete
+      [(ngModel)]="selectedItem"
+      [virtualScroll]="true"
+      [suggestions]="filteredItems"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterItems($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      placeholder="Select Year"
+    />
+    <p-button label="Search" icon="pi pi-search"/>
+  </div>
+  <br>
+  <p-button label="+ Notice"/>
+</div> 
+<br><br>
+<div class="card">
+    <p-table [tableStyle]="{'min-width': '60rem'}">
+        <ng-template #header>
+            <tr>
+                <th style="width:20%">
+                    <div class="flex items-center gap-2">
+                        ID
+                    </div>
+                </th>
+                <th style="width:20%">
+                    <div class="flex items-center gap-2">
+                        Date Issued
+                    </div>
+                </th>
+                <th style="width:20%">
+                    <div class="flex items-center gap-2">
+                        Content
+                    </div>
+                </th>
+                <th pSortableColumn="month" style="width:20%">
+                    <div class="flex items-center gap-2">
+                        Month
+                        <p-sortIcon field="month" />
+                    </div>
+                </th>
+                <th pSortableColumn="year" style="width:20%">
+                    <div class="flex items-center gap-2">
+                        Year
+                        <p-sortIcon field="year" />
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <!-- <ng-template #body let-product>
+            <tr>
+                <td>{{ product.code }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.quantity }}</td>
+            </tr>
+        </ng-template> -->
+    </p-table>
+</div>
