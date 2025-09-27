@@ -5,6 +5,7 @@
     border-radius: 6px;
     padding: 2%;
     background-color: aliceblue;
+    margin-left: 260px;
 }
 
 .bar{
@@ -16,4 +17,9 @@
 :host ::ng-deep .p-button{
     background-color: aliceblue;
     color: black;
+}
+
+.card{
+    margin-left: 260px;
+    width: 1200px;
 }

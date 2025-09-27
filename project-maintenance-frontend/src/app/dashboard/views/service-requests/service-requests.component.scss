@@ -1,6 +1,8 @@
 .requests{
     display: flex;
-    gap: 8px;
+    gap: 48px;
+    margin-left: 260px;
+    margin-top: 40px;
 }
 
 
@@ -8,7 +10,7 @@
     border: 1px solid aliceblue;
     border-radius: 6px;
     background-color: aliceblue;
-    width: 30%;
+    width: 25%;
     height: 90px;
 }
 
@@ -16,14 +18,14 @@
     border: 1px solid aliceblue;
     border-radius: 6px;
     background-color: aliceblue;
-    width: 30%;
+    width: 25%;
 }
 
 .pending{
     border: 1px solid aliceblue;
     border-radius: 6px;
     background-color: aliceblue;
-    width: 30%;
+    width: 25%;
 }
 
 h3{
@@ -33,6 +35,7 @@ h3{
 
 .filter-requests{
     margin-top: 60px;
+    margin-left: 260px;
     width: fit-content;
     height: 160px;
     border-radius: 6px;
@@ -51,3 +54,7 @@ h3{
     color: black;
 }
 
+.table{
+    margin-left: 260px;
+    width: 1200px;
+}

@@ -2,30 +2,35 @@
     border: 1px solid aliceblue;
     border-radius: 6px;
     background-color: aliceblue;
+    width: 1200px;
+    margin-left: 260px;
+    margin-top: 40px;
 }
 
 .service-status{
     display: flex;
-    gap: 4px;
+    gap: 123px;
+    margin-left: 260px;
 }
 
 .people{
     display: flex;
-    gap: 4px;
+    gap: 123px;
+    margin-left: 260px;
 }
 
 .pending{
     border: 1px solid aliceblue;
     border-radius: 6px;
     background-color: aliceblue;
-    width: 48%;
+    width: 34%;
 }
 
 .approved{
     border: 1px solid aliceblue;
     border-radius: 6px;
     background-color: aliceblue;
-    width: 48%;
+    width: 34%;
 }
 
 .residents{
@@ -33,7 +38,7 @@
     border: 1px solid aliceblue;
     border-radius: 6px;
     background-color: aliceblue;
-    width: 48%;
+    width: 34%;
 }
 
 .officers{
@@ -41,7 +46,7 @@
     border: 1px solid aliceblue;
     border-radius: 6px;
     background-color: aliceblue;
-    width: 48%;
+    width: 34%;
 }
 h5{
     margin-left: 6px;
@@ -50,12 +55,3 @@ h3{
     margin-left: 6px;
 }
 
-.sidebar {
-  width: 250px;
-  height: 100vh;
-  background: #f8f9fa;
-  position: fixed;
-  left: 0;
-  padding: 1rem;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-}

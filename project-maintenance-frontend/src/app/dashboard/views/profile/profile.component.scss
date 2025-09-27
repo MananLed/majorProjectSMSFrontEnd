@@ -9,7 +9,6 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     border: 2px solid aliceblue;
-    background-color: aliceblue;
     gap: 28px;
     width: 1100px;
     margin-left: 420px;
@@ -28,4 +27,15 @@
     border: 1px solid black;
     width: 540px;
     height: 40px;
+}
+
+.parent{
+    border: 1px solid white;
+    background-color: aliceblue;
+    height: 602px;
+}
+
+:host ::ng-deep .p-button{
+    background-color: aliceblue;
+    color: black;
 }

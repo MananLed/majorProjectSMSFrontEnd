@@ -1,6 +1,8 @@
 .users{
     display: flex;
     gap: 4px;
+    gap: 123px;
+    margin-left: 260px;
 }
 
 .residents, .officers{
@@ -8,11 +10,21 @@
     border: 1px solid aliceblue;
     border-radius: 6px;
     background-color: aliceblue;
-    width: 48%;
+    width: 34%;
     height: 80px;
 }
 
 h3{
     margin-left: 4px;
     margin-top: 25px;
+}
+
+.page-wrapper{
+    margin-left: 260px;
+    width: 1200px;
+}
+
+:host ::ng-deep .p-button{
+    background-color: aliceblue;
+    color: black;
 }
