@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { Menu } from 'primeng/menu';
 import { Menubar } from 'primeng/menubar';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -15,6 +16,11 @@ import { Menubar } from 'primeng/menubar';
   styleUrl: './layout.component.scss'
 })
 export class LayoutComponent {
+
+  constructor(private auth: AuthService, private router: Router){
+
+  }
+
   items: MenuItem[] = [];
     
       ngOnInit() {
@@ -27,5 +33,10 @@ export class LayoutComponent {
           { label: 'Notice', icon: 'pi pi-bell', routerLink: ['/dashboard/notice'] },
           { label: 'Profile', icon: 'pi pi-user', routerLink: ['/dashboard/profile'] }
         ];
+      }
+
+      logout(){
+        this.auth.logoutUser();
+        this.router.navigate(['/login']);
       }
 }

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Button } from "primeng/button";
 
 @Component({
@@ -7,6 +8,13 @@ import { Button } from "primeng/button";
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit{
+   userDetails: any;
 
+   constructor(private route: ActivatedRoute) {}
+
+   ngOnInit(): void{
+      this.userDetails = this.route.snapshot.data['userData'];
+      console.log(this.userDetails);
+   }
 }

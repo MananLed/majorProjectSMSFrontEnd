@@ -1,15 +1,24 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+// $table-width: 1200px;
+
+@import "../../../shared/variables.scss";
+
 #feedback{
     width: 800px;
     overflow: hidden;
     height: 37px;
-    border-radius: 6px;
+    border-radius: $curve;
 }
 
 .issueFeedback{
     margin-top: 30px;
     display: flex;
     gap: 18px;
-    margin-left: 260px;
+    margin-left: $left-space;
 }
 
 .b1{
@@ -18,11 +27,8 @@
 
 .card{
     margin-top: 40px;
-    margin-left: 260px;
-    width: 1200px;
+    margin-left: $left-space;
+    width: $table-width;
 }
 
-:host ::ng-deep .p-button{
-    background-color: aliceblue;
-    color: black;
-}
+

@@ -1,15 +1,24 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+$table-width1: 82%;
+
+@import "../../../shared/variables.scss";
+
 .users{
     display: flex;
     gap: 4px;
     gap: 123px;
-    margin-left: 260px;
+    margin-left: $left-space;
 }
 
 .residents, .officers{
     margin-top: 70px;
-    border: 1px solid aliceblue;
-    border-radius: 6px;
-    background-color: aliceblue;
+    border: 1px solid $background-theme;
+    border-radius: $curve;
+    background-color: $background-theme;
     width: 34%;
     height: 80px;
 }
@@ -20,11 +29,6 @@ h3{
 }
 
 .page-wrapper{
-    margin-left: 260px;
-    width: 1200px;
-}
-
-:host ::ng-deep .p-button{
-    background-color: aliceblue;
-    color: black;
+    margin-left: $left-space;
+    width: $table-width1;
 }

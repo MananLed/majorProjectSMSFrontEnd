@@ -21,4 +21,8 @@ export class ApisService {
   login(userData :LoginUser): Observable<any> {
     return this.http.post(`${this.baseUrl}/login`, userData);
   }
+
+  profile(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/profile`);
+  }
 }

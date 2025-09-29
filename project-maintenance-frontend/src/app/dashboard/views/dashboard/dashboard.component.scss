@@ -1,53 +1,42 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+// $table-width: 1200px;
+
+@import "../../../shared/variables.scss";
+
 .heading{
-    border: 1px solid aliceblue;
-    border-radius: 6px;
-    background-color: aliceblue;
+    border: 1px solid $background-theme;
+    border-radius: $curve;
+    background-color: $background-theme;
     width: 1200px;
-    margin-left: 260px;
+    margin-left: $left-space;
     margin-top: 40px;
 }
 
-.service-status{
+.service-status, .people{
     display: flex;
     gap: 123px;
-    margin-left: 260px;
+    margin-left: $left-space;
 }
 
-.people{
-    display: flex;
-    gap: 123px;
-    margin-left: 260px;
-}
-
-.pending{
-    border: 1px solid aliceblue;
-    border-radius: 6px;
-    background-color: aliceblue;
+.pending, .approved{
+    border: 1px solid $background-theme;
+    border-radius: $curve;
+    background-color: $background-theme;
     width: 34%;
 }
 
-.approved{
-    border: 1px solid aliceblue;
-    border-radius: 6px;
-    background-color: aliceblue;
-    width: 34%;
-}
-
-.residents{
+.residents, .officers{
     margin-top: 70px;
-    border: 1px solid aliceblue;
-    border-radius: 6px;
-    background-color: aliceblue;
+    border: 1px solid $background-theme;
+    border-radius: $curve;
+    background-color: $background-theme;
     width: 34%;
 }
 
-.officers{
-    margin-top: 70px;
-    border: 1px solid aliceblue;
-    border-radius: 6px;
-    background-color: aliceblue;
-    width: 34%;
-}
 h5{
     margin-left: 6px;
 }

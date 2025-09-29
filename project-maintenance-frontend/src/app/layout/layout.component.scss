@@ -1,7 +1,16 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+// $table-width: 1200px;
+
+@import "../shared/variables.scss";
+
 .sidebar {
   width: 250px;
-  height: 100vh;
-  background: #f8f9fa;
+  height: 603px;
+  background: $background-sidebar;
   position: fixed;
   left: 0;
   padding: 1rem;
@@ -12,7 +21,3 @@ h3{
     margin-left: 6px;
 }
 
-:host ::ng-deep .p-button{
-    background-color: aliceblue;
-    color: red;
-}

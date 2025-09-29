@@ -8,7 +8,9 @@ import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { customPreset } from './customThemePreset';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,12 +19,16 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: customPreset,
         options: {
             darkModeSelector: false || 'none'
         }
       },
     }),
-    provideHttpClient()
+    provideHttpClient(
+      withInterceptors(
+        [authInterceptor]
+      )
+    )
   ],
 };

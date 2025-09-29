@@ -1,8 +1,8 @@
 <div class="parent">
     <div class="buttons">
         <p-button label="Edit Profile" icon="pi pi-pen-to-square"/>
-        <p-button label="Change Password" icon="pi pi-lock"/>
-        <p-button label="Delete Profile" icon="pi pi-trash"/>
+        <p-button label="Change Password" severity="danger" icon="pi pi-lock"/>
+        <p-button label="Delete Profile" severity="danger" icon="pi pi-trash"/>
     </div>
     
     <div class="container">
@@ -10,31 +10,31 @@
             <div class="firstname">
               <label for="firstname">Firstname</label>
               <div class="detail">
-        
+                {{userDetails.data.first_name}}
               </div>
             </div>
             <div class="lastname">
               <label for="lastname">Lastname</label>
               <div class="detail">
-                
+                {{userDetails.data.last_name}}
               </div>
             </div>
             <div class="middlename">
               <label for="middlename">Middlename</label>
               <div class="detail">
-                
+                {{userDetails.data.middle_name}}
               </div>
             </div>
             <div class="mobile">
               <label for="mobile">Mobile Number</label>
               <div class="detail">
-                
+                {{userDetails.data.mobile_number}}
               </div>
             </div>
             <div class="email">
               <label for="email">Email</label>
               <div class="edetail">
-                
+                {{userDetails.data.email}}
               </div>
             </div>
             </div>

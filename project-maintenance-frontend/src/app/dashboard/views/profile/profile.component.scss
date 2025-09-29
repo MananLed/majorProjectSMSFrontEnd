@@ -1,41 +1,51 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+// $table-width: 1200px;
+
+@import "../../../shared/variables.scss";
+
 .buttons{
     display: flex;
     gap: 6px;
     margin-top: 148px;
-    justify-content: right;   
+    justify-content: right;  
+    margin-right: 10px; 
 }
 
 .profile{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    border: 2px solid aliceblue;
+    border: 2px solid $background-theme;
     gap: 28px;
-    width: 1100px;
+    width: 900px;
     margin-left: 420px;
     margin-top: 70px;
-    border-radius: 6px;
+    border-radius: $curve;
 }
 
 .detail{
-    border-radius: 6px;
+    border-radius: $curve;
     border: 1px solid black;
     width: 340px;
     height: 40px;
+    padding: 8px;
 }
 .edetail{
-    border-radius: 6px;
+    border-radius: $curve;
     border: 1px solid black;
     width: 540px;
     height: 40px;
+    padding: 8px;
 }
 
 .parent{
     border: 1px solid white;
-    background-color: aliceblue;
+    background-color: $background-theme;
     height: 602px;
+    width: 1513px;
 }
 
-:host ::ng-deep .p-button{
-    background-color: aliceblue;
-    color: black;
-}
+

@@ -1,11 +1,20 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+// $table-width: 1200px;
+
+@import "../../../shared/variables.scss";
+
 .filter-requests{
     margin-top: 60px;
     width: fit-content;
     height: 200px;
-    border-radius: 6px;
+    border-radius: $curve;
     padding: 2%;
-    background-color: aliceblue;
-    margin-left: 260px;
+    background-color: $background-theme;
+    margin-left: $left-space;
 }
 
 .bar{
@@ -14,12 +23,8 @@
     gap: 10px;
 }
 
-:host ::ng-deep .p-button{
-    background-color: aliceblue;
-    color: black;
-}
 
 .card{
-    margin-left: 260px;
-    width: 1200px;
+    margin-left: $left-space;
+    width: $table-width;
 }

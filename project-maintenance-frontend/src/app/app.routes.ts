@@ -1,11 +1,16 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './service/auth.guard';
+import { ProfileResolver } from './resolvers/profile.resolver';
 
 
 export const routes: Routes = [
+  {path: 'login', loadComponent: () => import('./login-signup/login-signup.component').then(c => c.LoginSignupComponent) },
   {
     path: 'dashboard',
     loadComponent: () =>
       import('./layout/layout.component').then(c => c.LayoutComponent),
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: '',
@@ -46,9 +51,12 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () => 
             import('./dashboard/views/profile/profile.component')
-              .then(c => c.ProfileComponent)
+              .then(c => c.ProfileComponent),
+            resolve: {
+                userData: ProfileResolver
+            }
       }
     ]
   },
-  { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
+  { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];
