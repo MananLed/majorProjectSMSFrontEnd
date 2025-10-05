@@ -82,7 +82,7 @@ export class LoginSignupComponent {
         },
         complete: () => {
           this.isFetching.set(false);
-        }
+        },
       });
   }
 
@@ -99,7 +99,7 @@ export class LoginSignupComponent {
         password: this.password,
       })
       .subscribe({
-        next: (res: any) =>{
+        next: (res: any) => {
           if (res.status === 'Success') {
             this.activeTab = 0;
           }
@@ -115,8 +115,7 @@ export class LoginSignupComponent {
         },
         complete: () => {
           this.isFetching.set(false);
-        }
+        },
       });
   }
 }
-

@@ -2,71 +2,106 @@
   <p><b>Search Notice</b></p>
   <div class="bar">
     <p-autocomplete
-      [(ngModel)]="selectedItem"
+      [(ngModel)]="selectedMonth"
       [virtualScroll]="true"
-      [suggestions]="filteredItems"
+      [suggestions]="filteredMonths"
       [virtualScrollItemSize]="34"
-      (completeMethod)="filterItems($event)"
+      (completeMethod)="filterMonths($event)"
       optionLabel="label"
       [dropdown]="true"
       placeholder="Select Month"
+      [forceSelection]="true"
     />
     <p-autocomplete
-      [(ngModel)]="selectedItem"
+      [(ngModel)]="selectedYear"
       [virtualScroll]="true"
-      [suggestions]="filteredItems"
+      [suggestions]="filteredYears"
       [virtualScrollItemSize]="34"
-      (completeMethod)="filterItems($event)"
+      (completeMethod)="filterYears($event)"
       optionLabel="label"
       [dropdown]="true"
       placeholder="Select Year"
+      [forceSelection]="true"
     />
-    <p-button label="Search" icon="pi pi-search"/>
+    <p-button pTooltip="Search Notices" icon="pi pi-search" />
   </div>
-  <br>
-  <p-button label="+ Notice"/>
-</div> 
-<br><br>
-<div class="card">
-    <p-table [tableStyle]="{'min-width': '60rem'}">
-        <ng-template #header>
-            <tr>
-                <th style="width:20%">
-                    <div class="flex items-center gap-2">
-                        ID
-                    </div>
-                </th>
-                <th style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Date Issued
-                    </div>
-                </th>
-                <th style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Content
-                    </div>
-                </th>
-                <th pSortableColumn="month" style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Month
-                        <p-sortIcon field="month" />
-                    </div>
-                </th>
-                <th pSortableColumn="year" style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Year
-                        <p-sortIcon field="year" />
-                    </div>
-                </th>
-            </tr>
-        </ng-template>
-        <!-- <ng-template #body let-product>
-            <tr>
-                <td>{{ product.code }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.category }}</td>
-                <td>{{ product.quantity }}</td>
-            </tr>
-        </ng-template> -->
-    </p-table>
+  <br />
+  @if (!isResident) {
+  <p-button pTooltip="Add Notice" icon="pi pi-plus" (onClick)="showDialog()" />
+  }
 </div>
+<br /><br />
+<div class="card">
+  <p-table
+    *ngIf="societyNotices?.data?.length > 0; else noNotices"
+    [value]="societyNotices.data"
+    [tableStyle]="{ 'min-width': '60rem' }"
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[5,10,20]"
+  >
+    <ng-template #header>
+      <tr>
+        <th style="width: 20%">
+          <div class="flex items-center gap-2">Date Issued</div>
+        </th>
+        <th style="width: 30%">
+          <div class="flex items-center gap-2">Content</div>
+        </th>
+        <th pSortableColumn="month" style="width: 15%">
+          <div class="flex items-center gap-2">
+            Month
+            <p-sortIcon field="month" />
+          </div>
+        </th>
+        <th pSortableColumn="year" style="width: 20%">
+          <div class="flex items-center gap-2">
+            Year
+            <p-sortIcon field="year" />
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-data>
+      <tr>
+        <td>{{ data.date_issued }}</td>
+        <td>{{ data.content }}</td>
+        <td>{{ data.month }}</td>
+        <td>{{ data.year }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <ng-template #noNotices>
+    <p>No notices for now</p>
+  </ng-template>
+</div>
+
+<p-dialog
+  header="Issue Notice"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '25rem' }"
+>
+  <span class="p-text-secondary block mb-8">Enter the content</span>
+  <br /><br />
+  <textarea
+    placeholder="Max 500 characters..."
+    rows="5"
+    cols="50"
+    maxlength="500"
+    [(ngModel)]="content"
+  ></textarea>
+  <br /><br />
+  <div class="buttons">
+      <p-button
+        label="Cancel"
+        severity="contrast"
+        (onClick)="hideDialog()"
+      ></p-button>
+    <p-button label="Issue" (onClick)="issueNotice()"></p-button>
+  </div>
+</p-dialog>
+
+@if (isFetching()) {
+<app-loader></app-loader>
+}

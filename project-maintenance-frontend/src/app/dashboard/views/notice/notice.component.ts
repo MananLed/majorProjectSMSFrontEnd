@@ -1,41 +1,151 @@
-import { Component } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { AutoComplete } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
+import { ApisService } from '../../../service/apis.service';
+import { LoaderComponent } from '../loader/loader.component';
+import { Tooltip } from 'primeng/tooltip';
+import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-notice',
-  imports: [AutoComplete, ButtonModule, FormsModule, TableModule],
+  imports: [
+    AutoComplete,
+    ButtonModule,
+    FormsModule,
+    TableModule,
+    NgIf,
+    NgFor,
+    DialogModule,
+    LoaderComponent,
+    Tooltip,
+  ],
   templateUrl: './notice.component.html',
-  styleUrl: './notice.component.scss'
+  styleUrl: './notice.component.scss',
 })
-export class NoticeComponent {
-   selectedItem: any;
+export class NoticeComponent implements OnInit {
+  societyNotices: any;
+  isFetching = signal(false);
+  content!: string;
+  visible: boolean = false;
+  userRole: string | null = null;
+  isAdmin: boolean = false;
+  isOfficer: boolean = false;
+  isResident: boolean = false;
 
-    filteredItems!: any[];
+  selectedItem: any;
 
-    items: any[] | undefined;
+  selectedYear: any;
+  selectedMonth: any;
 
-    filterItems(event: any) {
-        //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
-        let filtered: any[] = [];
-        let query = event.query;
+  filteredYears!: any[];
+  filteredMonths!: any[];
 
-        for (let i = 0; i < (this.items as any[]).length; i++) {
-            let item = (this.items as any[])[i];
-            if (item.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(item);
-            }
-        }
+  years: any = [];
+  months: any = [];
 
-        this.filteredItems = filtered;
+  
+  constructor(
+    private route: ActivatedRoute,
+    private api: ApisService,
+    private auth: AuthService
+  ) {}
+
+  filterYears(event: any) {
+    const query = event.query;
+    this.filteredYears = this.years.filter((year: any) =>
+      this.years.toString().toLowerCase().includes(query.toLowerCase())
+    );
+    this.filteredYears = this.years.map((year: any) => ({
+      label: year,
+      value: year,
+    }));
+  }
+
+  filterMonths(event: any) {
+    const query = event.query;
+    this.filteredMonths = this.months.filter((month: any) =>
+      month.toString().toLowerCase().includes(query.toLowerCase())
+    );
+    this.filteredMonths = this.months.map((month: any) => ({
+      label: month,
+      value: month,
+    }));
+  }
+
+  ngOnInit(): void {
+    this.societyNotices = this.route.snapshot.data['societyNotices'];
+    this.userRole = this.auth.getRole();
+    this.isAdmin = this.auth.isAdmin();
+    this.isOfficer = this.auth.isOfficer();
+    this.isResident = this.auth.isResident();
+
+    const yearsSet = new Set<any>();
+    const monthsSet = new Set<any>();
+
+    this.societyNotices.data.forEach((item: any) => {
+      yearsSet.add(item.year);
+      monthsSet.add(item.month);
+    });
+
+    this.years = [...yearsSet];
+    this.months = [...monthsSet];
+
+    this.filteredYears = [...this.years];
+    this.filteredMonths = [...this.months];
+
+    this.filteredYears = this.years.map((year: any) => ({
+      label: year,
+      value: year,
+    }));
+    this.filteredMonths = this.months.map((month: any) => ({
+      label: month,
+      value: month,
+    }));
+  }
+
+  showDialog() {
+    this.visible = true;
+  }
+
+  hideDialog() {
+    this.visible = false;
+  }
+
+  fetchNotices(): void {
+    this.api.getNotices().subscribe({
+      next: (res) => {
+        this.societyNotices = res;
+      },
+      error: (err) => {
+        console.error('Error fetching notices:', err);
+      },
+    });
+  }
+
+  issueNotice(): void {
+    this.isFetching.set(true);
+
+    if (this.content === '') {
+      this.isFetching.set(false);
+      return;
     }
 
-    ngOnInit() {
-        this.items = [];
-        for (let i = 0; i < 10000; i++) {
-            this.items.push({ label: 'Item ' + i, value: 'Item ' + i });
-        }
-    }
+    this.api.putNotice({ content: this.content }).subscribe({
+      next: (res) => {
+        this.fetchNotices();
+        this.visible = false;
+        this.content = '';
+        this.isFetching.set(false);
+      },
+      error: (err) => {
+        this.isFetching.set(false);
+        console.error('Error adding notice:', err);
+      },
+    });
+  }
 }

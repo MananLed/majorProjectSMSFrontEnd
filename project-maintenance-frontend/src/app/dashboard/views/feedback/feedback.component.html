@@ -1,52 +1,84 @@
+@if (isResident) {
 <div class="issueFeedback">
-    <div class="issue">
-        <h3>Give Feedback</h3>
-        <textarea type="text" id="feedback" placeholder="Enter Feedback here"></textarea>
+  <div class="issue">
+    <h3>Give Feedback</h3>
+    <div class="rating">
+        <p-autocomplete
+          [(ngModel)]="rating"
+          [dropdown]="true"
+          [suggestions]="filteredRatings"
+          (completeMethod)="filterRating($event)"
+          [forceSelection]="true"
+          placeholder="Rating"
+        />
     </div>
-    <div class="b1">
-        <p-button label="+ Feedback"/>
-    </div>
+    <textarea
+      type="text"
+      id="feedback"
+      rows="5"
+      cols="100"
+      maxlength="500"
+      placeholder="Max 500 characters..."
+      [(ngModel)]="content"
+    ></textarea>
+  </div>
+  <div class="b1">
+    <p-button
+      pTooltip="Add Feedback"
+      icon="pi pi-plus"
+      (onClick)="addFeedback()"
+    />
+  </div>
 </div>
+}
 
 <div class="card">
-    <p-table [tableStyle]="{'min-width': '60rem'}">
-        <ng-template #header>
-            <tr>
-                <th style="width:20%">
-                    <div class="flex items-center gap-2">
-                        ID
-                    </div>
-                </th>
-                <th style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Resident ID
-                    </div>
-                </th>
-                <th pSortableColumn="rating" style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Rating (Out of 5)
-                        <p-sortIcon field="rating" />
-                    </div>
-                </th>
-                <th style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Content
-                    </div>
-                </th>
-                <th style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Flat 
-                    </div>
-                </th>
-            </tr>
-        </ng-template>
-        <!-- <ng-template #body let-product>
-            <tr>
-                <td>{{ product.code }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.category }}</td>
-                <td>{{ product.quantity }}</td>
-            </tr>
-        </ng-template> -->
-    </p-table>
+  @if (isResident) {
+    <p>Your recent Feedbacks</p>
+  }@else {
+    <p>Resident's Feedbacks</p>
+  }
+  <p-table
+    *ngIf="userFeedback?.data?.length > 0; else noFeedback"
+    [value]="userFeedback.data"
+    [tableStyle]="{ 'min-width': '60rem' }"
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[5,10,20]"
+  >
+    <ng-template #header>
+      <tr>
+        <th style="width: 20%">
+          <div class="flex items-center gap-2">Resident Name</div>
+        </th>
+        <th style="width: 25%">
+          <div class="flex items-center gap-2">Flat</div>
+        </th>
+        <th pSortableColumn="rating" style="width: 15%">
+          <div class="flex items-center gap-2">
+            Rating (Out of 5)
+            <p-sortIcon field="rating" />
+          </div>
+        </th>
+        <th style="width: 40%">
+          <div class="flex items-center gap-2">Content</div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-data>
+      <tr>
+        <td>{{ data.name }}</td>
+        <td>{{ data.flat }}</td>
+        <td>{{ data.rating }}</td>
+        <td>{{ data.content }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <ng-template #noFeedback>
+    <p>No feedbacks for now</p>
+  </ng-template>
 </div>
+
+@if (isFetching()) {
+<app-loader></app-loader>
+}

@@ -34,12 +34,11 @@ export const customPreset = definePreset(Aura, {
       dark: {
         primary: {
           color: '{sky.50}',
-          inverseColor: '{sky.950}',
           hoverColor: '{sky.100}',
           activeColor: '{sky.200}',
         },
         highlight: {
-          background: 'rgba(250, 250, 250, .16)',
+          background: 'rgba(19, 17, 17, 0.16)',
           focusBackground: 'rgba(250, 250, 250, .24)',
           color: 'rgba(255,255,255,.87)',
           focusColor: 'rgba(255,255,255,.87)',

@@ -2,71 +2,104 @@
   <p><b>Search Invoice</b></p>
   <div class="bar">
     <p-autocomplete
-      [(ngModel)]="selectedItem"
+      [(ngModel)]="selectedMonth"
       [virtualScroll]="true"
-      [suggestions]="filteredItems"
+      [suggestions]="filteredMonths"
       [virtualScrollItemSize]="34"
-      (completeMethod)="filterItems($event)"
+      (completeMethod)="filterMonths($event)"
       optionLabel="label"
       [dropdown]="true"
       placeholder="Select Month"
+      [forceSelection]="true"
     />
     <p-autocomplete
-      [(ngModel)]="selectedItem"
+      [(ngModel)]="selectedYear"
       [virtualScroll]="true"
-      [suggestions]="filteredItems"
+      [suggestions]="filteredYears"
       [virtualScrollItemSize]="34"
-      (completeMethod)="filterItems($event)"
+      (completeMethod)="filterYears($event)"
       optionLabel="label"
       [dropdown]="true"
       placeholder="Select Year"
+      [forceSelection]="true"
     />
-    <p-button label="Search" icon="pi pi-search"/>
+    <p-button pTooltip="Search Invoices" icon="pi pi-search" />
   </div>
-  <br>
-  <p-button label="+ Invoice"/>
-</div> 
+  <br />
+  @if (!isResident) {
+    <p-button icon="pi pi-plus" pTooltip="Add Invoice" (onClick)="showDialog()" />
+  }
+</div>
 
-
-<br><br>
-
+<br /><br />
 
 <div class="card">
-    <p-table [tableStyle]="{'min-width': '60rem'}">
-        <ng-template #header>
-            <tr>
-                <th style="width:20%">
-                    <div class="flex items-center gap-2">
-                        ID
-                    </div>
-                </th>
-                <th pSortableColumn="month" style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Month
-                        <p-sortIcon field="month"/>
-                    </div>
-                </th>
-                <th pSortableColumn="year" style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Year
-                        <p-sortIcon field="year" />
-                    </div>
-                </th>
-                <th pSortableColumn="amount" style="width:20%">
-                    <div class="flex items-center gap-2">
-                        Amount
-                        <p-sortIcon field="amount" />
-                    </div>
-                </th>
-            </tr>
-        </ng-template>
-        <!-- <ng-template #body let-product>
-            <tr>
-                <td>{{ product.code }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.category }}</td>
-                <td>{{ product.quantity }}</td>
-            </tr>
-        </ng-template> -->
-    </p-table>
+  <p-table
+    *ngIf="invoiceData?.data?.length > 0; else noInvoice"
+    [value]="invoiceData.data"
+    [tableStyle]="{ 'min-width': '60rem' }"
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[5,10,20]"
+  >
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="month" style="width: 25%">
+          <div class="flex items-center gap-2">
+            Month
+            <p-sortIcon field="month" />
+          </div>
+        </th>
+        <th pSortableColumn="year" style="width: 25%">
+          <div class="flex items-center gap-2">
+            Year
+            <p-sortIcon field="year" />
+          </div>
+        </th>
+        <th pSortableColumn="amount" style="width: 25%">
+          <div class="flex items-center gap-2">
+            Amount
+            <p-sortIcon field="amount" />
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-data>
+      <tr>
+        <td>{{ data.month }}</td>
+        <td>{{ data.year }}</td>
+        <td>Rs {{ data.amount }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <ng-template #noInvoice>
+    <p>No Invoices for now</p>
+  </ng-template>
 </div>
+
+<p-dialog
+  header="Issue Invoice"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '25rem' }"
+>
+  <span class="p-text-secondary block mb-8">Enter the Amount</span>
+  <br /><br />
+  <p-floatlabel variant="on">
+    <input pInputText id="amount" [(ngModel)]="amount" autocomplete="off" />
+    <label for="amount">Amount</label>
+  </p-floatlabel>
+  <br /><br />
+  <div class="buttons">
+      <p-button
+        label="Cancel"
+        severity="contrast"
+        (onClick)="hideDialog()"
+      ></p-button>
+    <p-button label="Issue" (onClick)="issueInvoice()"></p-button>
+  </div>
+</p-dialog>
+
+@if (isFetching()) {
+<app-loader></app-loader>
+}

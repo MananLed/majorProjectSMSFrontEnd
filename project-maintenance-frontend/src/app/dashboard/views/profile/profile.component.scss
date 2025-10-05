@@ -10,7 +10,7 @@
 .buttons{
     display: flex;
     gap: 6px;
-    margin-top: 148px;
+    margin-top: 20px;
     justify-content: right;  
     margin-right: 10px; 
 }
@@ -18,12 +18,16 @@
 .profile{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    border: 2px solid $background-theme;
     gap: 28px;
-    width: 900px;
-    margin-left: 420px;
-    margin-top: 70px;
+    width: 950px;
+    height: 300px;
+    margin-left: $left-space;
+    margin-top: 40px;
     border-radius: $curve;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    border: 1px solid $background-theme;
+    padding: 16px;
+
 }
 
 .detail{
@@ -32,6 +36,7 @@
     width: 340px;
     height: 40px;
     padding: 8px;
+    background-color: white;
 }
 .edetail{
     border-radius: $curve;
@@ -39,13 +44,22 @@
     width: 540px;
     height: 40px;
     padding: 8px;
+    background-color: white;
 }
 
 .parent{
     border: 1px solid white;
-    background-color: $background-theme;
-    height: 602px;
-    width: 1513px;
+    // height: 600px;
+    width: 1250px;
 }
 
 
+.buttons1{
+    display: flex;
+    gap: 8px;
+    justify-content: right;
+}
+
+#firstname, #middlename, #lastname, #mobile, #email{
+    width: 330px
+}

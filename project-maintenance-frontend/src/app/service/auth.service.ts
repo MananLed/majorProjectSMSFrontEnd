@@ -30,4 +30,16 @@ export class AuthService {
   getEmail(): string | null {
     return localStorage.getItem(this.email);
   }
+
+  isAdmin() :boolean{
+    return localStorage.getItem(this.role) === 'admin';
+  }
+  
+  isOfficer() :boolean{
+    return localStorage.getItem(this.role) === 'officer';
+  }
+
+  isResident() :boolean{
+    return localStorage.getItem(this.role) === 'resident';
+  }
 }

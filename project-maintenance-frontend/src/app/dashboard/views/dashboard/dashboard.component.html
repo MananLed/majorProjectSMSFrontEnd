@@ -1,37 +1,49 @@
 <div class="heading">
-    <h3>Welcome to UpKeepz</h3>
-    <h5>Here's your maintenance overview for today</h5>
+  <h3>Welcome to UpKeepz</h3>
+  <h5>Here's your maintenance overview for today</h5>
 </div>
-<br><br>
+<br /><br />
 <div class="service-status">
-    <div class="pending">
+  <div class="pending">
+    <div class="label">
         <h3>Pending Requests</h3>
         <h5>Awaiting Approval</h5>
-        <div class="pending-count">
-            
-        </div>
     </div>
-    <div class="approved">
+    <div class="pending-count">
+        <p-avatar label="{{pendingRequestCount}}" class="mr-1" size="large" id="label" />
+    </div>
+  </div>
+  <div class="approved">
+    <div class="label">
         <h3>Approved Requests</h3>
         <h5>Ready for Service</h5>
-        <div class="approved-count">
-            
-        </div>
     </div>
+    <div class="approved-count">
+        <p-avatar label="{{approvedRequestCount}}" class="mr-1" size="large" id="label" />
+    </div>
+  </div>
 </div>
-<div class="people">
-    <div class="residents">
-        <h3>Residents</h3>
-        <h5>Active Residents</h5>
+
+@if (!isResident) {
+    <div class="people">
+      <div class="residents">
+        <div class="label">
+            <h3>Residents</h3>
+            <h5>Active Residents</h5>
+        </div>
         <div class="resident-count">
-            
+            <p-avatar label="{{residentCount.data}}" class="mr-1" size="large" id="label" />
         </div>
-    </div>
-    <div class="officers">
-        <h3>Officers</h3>
-        <h5>Active Officers</h5>
+      </div>
+      <div class="officers">
+        <div class="label">
+            <h3>Officers</h3>
+            <h5>Active Officers</h5>
+        </div>
         <div class="officer-count">
-            
+            <p-avatar label="{{officerCount.data}}" class="mr-1" size="large" id="label" />
         </div>
+      </div>
     </div>
-</div>
+    
+}

@@ -6,13 +6,13 @@ import { catchError, Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class ProfileResolver implements Resolve<any> {
+export class InvoiceResolver implements Resolve<any> {
   constructor(private api: ApisService) {}
 
   resolve(): Observable<any> {
-    return this.api.profile().pipe(
+    return this.api.getInvoices().pipe(
       catchError((error) => {
-        console.error('Error fetching profile data', error);
+        console.error('Error fetching the invoice data', error);
         return of(null);
       })
     );
