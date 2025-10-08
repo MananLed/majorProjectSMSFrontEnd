@@ -2,13 +2,23 @@
   <div class="residents">
     <h3>Total Residents</h3>
     <div class="resident-count">
-      <p-avatar label="{{noOfResidents}}" class="mr-1" size="large" id="label" />
+      <p-avatar
+        label="{{ noOfResidents }}"
+        class="mr-1"
+        size="large"
+        id="label"
+      />
     </div>
   </div>
   <div class="officers">
     <h3>Total Officers</h3>
     <div class="officer-count">
-      <p-avatar label="{{noOfOfficers}}" class="mr-1" size="large" id="label" />
+      <p-avatar
+        label="{{ noOfOfficers }}"
+        class="mr-1"
+        size="large"
+        id="label"
+      />
     </div>
   </div>
 </div>
@@ -28,16 +38,31 @@
             *ngIf="residentDetails?.data?.length > 0; else noResidents"
             [value]="residentDetails.data"
             [tableStyle]="{ 'min-width': '50rem' }"
-            [paginator]="true"
+            [paginator]="residentDetails?.data?.length > 5"
             [rows]="5"
             [rowsPerPageOptions]="[5, 10, 20]"
           >
             <ng-template #header>
               <tr>
-                <th>Name</th>
+                <th pSortableColumn="first_name" style="width: 20%">
+                  <div class="flex items-center gap-2">
+                    Name
+                    <p-sortIcon field="first_name" />
+                  </div>
+                </th>
                 <th>Mobile</th>
-                <th>Email</th>
-                <th>Flat</th>
+                <th pSortableColumn="email" style="width: 20%">
+                  <div class="flex items-center gap-2">
+                    Email
+                    <p-sortIcon field="email" />
+                  </div>
+                </th>
+                <th pSortableColumn="flat" style="width: 20%">
+                  <div class="flex items-center gap-2">
+                    Flat
+                    <p-sortIcon field="flat" />
+                  </div>
+                </th>
                 <th>Actions</th>
               </tr>
             </ng-template>
@@ -51,7 +76,11 @@
                 <td>{{ data.email }}</td>
                 <td>{{ data.flat }}</td>
                 <td>
-                  <p-button severity="danger" icon="pi pi-trash"></p-button>
+                  <p-button
+                    severity="danger"
+                    icon="pi pi-trash"
+                    (onClick)="deleteResident(data.id)"
+                  ></p-button>
                 </td>
               </tr>
             </ng-template>
@@ -73,15 +102,25 @@
             *ngIf="officerDetails?.data?.length > 0; else noOfficers"
             [value]="officerDetails.data"
             [tableStyle]="{ 'min-width': '50rem' }"
-            [paginator]="true"
+            [paginator]="officerDetails?.data?.length > 5"
             [rows]="5"
             [rowsPerPageOptions]="[5, 10, 20]"
           >
             <ng-template #header>
               <tr>
-                <th>Name</th>
+                <th pSortableColumn="first_name" style="width: 20%">
+                  <div class="flex items-center gap-2">
+                    Name
+                    <p-sortIcon field="first_name" />
+                  </div>
+                </th>
                 <th>Mobile</th>
-                <th>Email</th>
+                <th pSortableColumn="email" style="width: 20%">
+                  <div class="flex items-center gap-2">
+                    Email
+                    <p-sortIcon field="email" />
+                  </div>
+                </th>
                 <th>Actions</th>
               </tr>
             </ng-template>
@@ -94,7 +133,11 @@
                 <td>{{ data.mobile_number }}</td>
                 <td>{{ data.email }}</td>
                 <td>
-                  <p-button severity="danger" icon="pi pi-trash"></p-button>
+                  <p-button
+                    severity="danger"
+                    icon="pi pi-trash"
+                    (onClick)="deleteOfficer(data.id)"
+                  ></p-button>
                 </td>
               </tr>
             </ng-template>
@@ -143,7 +186,11 @@
       severity="contrast"
       (onClick)="hideDialog()"
     ></p-button>
-    <p-button label="Add" (onClick)="addOfficer()"></p-button>
+    <p-button
+      [disabled]="!officerEmail || !officerPassword"
+      label="Add"
+      (onClick)="addOfficer()"
+    ></p-button>
   </div>
 </p-dialog>
 

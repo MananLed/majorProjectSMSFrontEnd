@@ -56,16 +56,22 @@ h3{
 .total-count{
     margin-top: 20px;
     margin-left: 100px;
+    font-size: larger;
+    font-weight: bold;
 }
 
 .pending-count{
     margin-top: 20px;
     margin-left: 75px;
+    font-size: larger;
+    font-weight: bold;
 }
 
 .approved-count{
     margin-top: 20px;
     margin-left: 60px;
+    font-size: larger;
+    font-weight: bold;
 }
 
 .actions{
@@ -77,4 +83,22 @@ h3{
     display: flex;
     gap: 8px;
     justify-content: right;
+}
+
+.app{
+    border-radius: 14px;
+    width: 100px;
+    background-color: #adeaad;
+    color: darkgreen;
+    text-align: center;
+    padding: 4px;
+}
+
+.pen{
+    border-radius: 14px;
+    width: 100px;
+    text-align: center;
+    padding: 4px;
+    background-color: #f8c6d7;
+    color: #c61230;
 }

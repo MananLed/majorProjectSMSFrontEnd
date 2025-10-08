@@ -12,7 +12,8 @@
     gap: 6px;
     margin-top: 20px;
     justify-content: right;  
-    margin-right: 10px; 
+    width: 100%;
+    margin-left: 10px; 
 }
 
 .profile{
@@ -51,6 +52,11 @@
     border: 1px solid white;
     // height: 600px;
     width: 1250px;
+}
+
+.heading{
+    margin-left: $left-space;
+    margin-top: -60px;
 }
 
 

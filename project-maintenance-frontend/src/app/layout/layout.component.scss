@@ -23,8 +23,26 @@ h3{
 
 .dashboard-content{
     overflow: auto;
-    width: 1272px;
-    height: 602px;
+    width: 1270px;
+    height: 600px;
     margin-left: 245px;
+    background-image: url('https://t4.ftcdn.net/jpg/02/38/98/51/360_F_238985162_mSAmFi0yyZI4xQb6iwSJeW2SlaVtGFdt.jpg');
 }
 
+.nav{
+  margin-top: -2px;
+}
+
+// .p-button-danger-hover {
+//   background-color: transparent;
+//   color: red; /* Set the initial icon color to red */
+//   transition: all 0.3s ease; /* Add a smooth transition */
+//   width: 100px;
+//   height: 20px;
+// }
+
+// /* Hover state: Red background, white trash icon */
+// .p-button-danger-hover:hover {
+//   background-color: red;
+//   color: white; /* Change the icon color to white */
+// }

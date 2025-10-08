@@ -25,10 +25,11 @@ import { AuthService } from '../../../service/auth.service';
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
-  userDetails: any;
+  userDetails!: any;
   isFetching = signal(false);
   visible: boolean = false;
   visibleChangePassword: boolean = false;
+  visibleDeleteProfile: boolean = false;
 
   firstname: any = '';
   middlename: any = '';
@@ -61,6 +62,14 @@ export class ProfileComponent implements OnInit {
 
   hideDialogChangePassword() {
     this.visibleChangePassword = false;
+  }
+
+  showDialogDeleteProfile(){
+    this.visibleDeleteProfile = true;
+  }
+
+  hideDialogDeleteProfile(){
+    this.visibleDeleteProfile = false;
   }
 
   fetchProfile(): void {
@@ -146,5 +155,20 @@ export class ProfileComponent implements OnInit {
           console.error('Error updating the password: ', err);
         },
       });
+  }
+
+  deleteProfile():void{
+    this.isFetching.set(true);
+    this.api.deleteProfile().subscribe({
+      next: (res) => {
+        this.isFetching.set(false);
+        this.auth.logoutUser();
+        this.routes.navigate(['/login']);
+      },
+      error: (err) => {
+        this.isFetching.set(false);
+        console.error('Error deleting profile:', err);
+      }
+    });
   }
 }

@@ -1,7 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LoginUser, User } from '../interface/user.model';
+import { LoginUser, Officer, User } from '../interface/user.model';
+import { Invoice } from '../interface/invoice.model';
+import { Notice } from '../interface/notice.model';
+import { ChangePassword, Profile } from '../interface/profile.model';
+import { Feedback } from '../interface/feedback.model';
+import { ServiceRequest } from '../interface/request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,23 +52,23 @@ export class ApisService {
     return this.http.get(`${this.baseUrl}/invoices/month-year`, {params});
   }
 
-  putInvoice(invoice: {amount: number}): Observable<any>{
+  putInvoice(invoice: Invoice): Observable<any>{
     return this.http.post(`${this.baseUrl}/invoices/issue`, invoice);
   }
 
-  putNotice(notice: {content: string}): Observable<any>{
+  putNotice(notice: Notice): Observable<any>{
     return this.http.post(`${this.baseUrl}/notices/issue`, notice);
   }
 
-  putOfficer(officer: {email: string, password: string}): Observable<any>{
+  putOfficer(officer: Officer): Observable<any>{
     return this.http.post(`${this.baseUrl}/officers`, officer);
   }
 
-  updateProfile(profile: {firstname: string, middlename: string, lastname: string, email: string, mobilenumber: string}): Observable<any>{
+  updateProfile(profile: Profile): Observable<any>{
     return this.http.patch(`${this.baseUrl}/profile/update`, profile);
   }
 
-  putFeedback(feedback: {rating: number, content: string}): Observable<any>{
+  putFeedback(feedback: Feedback): Observable<any>{
     return this.http.post(`${this.baseUrl}/feedbacks`, feedback);
   }
 
@@ -83,8 +88,12 @@ export class ApisService {
     return this.http.get(`${this.baseUrl}/service/resident/all`);
   }
 
-  updatePassword(passwordDetails: {oldPassword: string, newPassword: string}): Observable<any>{
+  updatePassword(passwordDetails: ChangePassword): Observable<any>{
     return this.http.patch(`${this.baseUrl}/profile/password`, passwordDetails);
+  }
+
+  deleteProfile(): Observable<any>{
+    return this.http.delete(`${this.baseUrl}/profile`);
   }
 
   getAvailableTimeSlots(serviceType: string): Observable<any>{
@@ -94,7 +103,53 @@ export class ApisService {
   }
 
   deleteRequest(id: any): Observable<any>{
-    const url = `${this.baseUrl}/service/cancel/${id}`;
-    return this.http.delete(url);
+    return this.http.delete(`${this.baseUrl}/service/cancel/${id}`);
+  }
+
+  approveRequest(id: any): Observable<any>{
+    return this.http.patch(`${this.baseUrl}/service/approve/${id}`, {});
+  }
+
+  rescheduleRequest(id: any, slot: {slot: number}): Observable<any>{
+    return this.http.patch(`${this.baseUrl}/service/reschedule/${id}`, slot);
+  }
+
+  putRequest(service: ServiceRequest): Observable<any>{
+    return this.http.post(`${this.baseUrl}/service`, service);
+  }
+
+  deleteOfficer(officerID: any): Observable<any>{
+    const params = new HttpParams().set('id', officerID);
+    return this.http.delete(`${this.baseUrl}/credentials/officer`, {params});
+  }
+
+  deleteResident(residentID: any): Observable<any>{
+    const params = new HttpParams().set('id', residentID);
+    return this.http.delete(`${this.baseUrl}/credentials/resident`, {params});
+  }
+
+  searchNotice(selectedMonth: any, selectedYear: any): Observable<any>{
+    if(selectedMonth == null){
+      const params = new HttpParams().set('year', selectedYear);
+      return this.http.get(`${this.baseUrl}/notices/month-year`, {params});
+    }else{
+      const params = new HttpParams().set('month', selectedMonth).set('year', selectedYear);
+      return this.http.get(`${this.baseUrl}/notices/month-year`, {params});
+    }
+  }
+
+  searchInvoice(selectedMonth: any, selectedYear: any): Observable<any>{
+    if(selectedMonth == null){
+      const params = new HttpParams().set('year', selectedYear);
+      return this.http.get(`${this.baseUrl}/invoices/month-year`, {params});
+    }else{
+      const params = new HttpParams().set('month', selectedMonth).set('year', selectedYear);
+      return this.http.get(`${this.baseUrl}/invoices/month-year`, {params});
+    }
+  }
+
+  searchRequests(selectedService: any, selectedStatus: any): Observable<any>{
+    const params = new HttpParams().set('status', selectedStatus).set('serviceType', selectedService);
+    return this.http.get(`${this.baseUrl}/service/type-status`, {params});
   }
 }

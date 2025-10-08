@@ -65,7 +65,19 @@ export class UserManagementComponent implements OnInit {
         error: (err) => {
           console.error('Error fetching the details of officers:', err);
         }
-      })
+      });
+    }
+
+    fetchResidents(): void{
+      this.api.getResidents().subscribe({
+        next: (res) => {
+          this.residentDetails = res;
+          this.noOfResidents = res.data.length;
+        },
+        error: (err) => {
+          console.error('Error fetching the details of residents:', err);
+        }
+      });
     }
 
     addOfficer(): void{
@@ -90,7 +102,33 @@ export class UserManagementComponent implements OnInit {
         }
       });
 
+    }
 
+    deleteResident(residentID: any){
+      this.isFetching.set(true);
+        this.api.deleteResident(residentID).subscribe({
+            next: (res) => {
+              this.fetchResidents();
+              this.isFetching.set(false);
+            },
+            error: (err) => {
+              this.isFetching.set(false);
+              console.error('Error deleting resident:', err);
+            }
+        });
+    }
 
+    deleteOfficer(officerID: any){
+      this.isFetching.set(true);
+      this.api.deleteOfficer(officerID).subscribe({
+          next: (res) => {
+            this.fetchOfficers();
+            this.isFetching.set(false);
+          },
+          error: (err) => {
+            this.isFetching.set(false);
+            console.error('Error deleting officer:', err);
+          }
+      });
     }
 }

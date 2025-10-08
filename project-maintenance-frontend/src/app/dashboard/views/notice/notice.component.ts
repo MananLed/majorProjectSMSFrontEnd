@@ -39,8 +39,8 @@ export class NoticeComponent implements OnInit {
 
   selectedItem: any;
 
-  selectedYear: any;
-  selectedMonth: any;
+  selectedYear: any = null;
+  selectedMonth: any = null;
 
   filteredYears!: any[];
   filteredMonths!: any[];
@@ -48,7 +48,7 @@ export class NoticeComponent implements OnInit {
   years: any = [];
   months: any = [];
 
-  
+
   constructor(
     private route: ActivatedRoute,
     private api: ApisService,
@@ -125,6 +125,56 @@ export class NoticeComponent implements OnInit {
         console.error('Error fetching notices:', err);
       },
     });
+  }
+
+  searchNotice(){
+    if(!this.selectedYear && !this.selectedMonth){
+      this.isFetching.set(true);
+      this.fetchNotices();
+      this.isFetching.set(false);
+      return;
+    }
+
+    if(!this.selectedMonth && this.selectedYear){
+      this.isFetching.set(true);
+      this.api.searchNotice(null, this.selectedYear).subscribe({
+        next: (res) => {
+          this.societyNotices = res;
+          this.selectedMonth = null;
+          this.selectedYear = null;
+          this.isFetching.set(false);
+        },
+        error: (err) => {
+          console.error('Error searching notices: ', err);
+          this.selectedMonth = null;
+          this.selectedYear = null;
+          this.isFetching.set(false);
+        }
+      });
+      return;
+    }
+
+    if(this.selectedMonth && this.selectedYear){
+      this.isFetching.set(true);
+      this.api.searchNotice(this.selectedMonth, this.selectedYear).subscribe({
+        next: (res) => {
+          console.log(res);
+          console.log(this.selectedMonth);
+          console.log(this.selectedYear);
+          this.societyNotices = res;
+          this.selectedMonth = null;
+          this.selectedYear = null;
+          this.isFetching.set(false);
+        },
+        error: (err) => {
+          console.error('Error searching notices: ', err);
+          this.selectedMonth = null;
+          this.selectedYear = null;
+          this.isFetching.set(false);
+        }
+      });
+      return;
+    }
   }
 
   issueNotice(): void {

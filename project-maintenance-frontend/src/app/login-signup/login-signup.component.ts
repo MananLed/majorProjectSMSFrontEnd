@@ -68,7 +68,7 @@ export class LoginSignupComponent {
         next: (res: any) => {
           if (res.status === 'Success' && res && res.data) {
             this.auth.loginUser(res.data.token, res.data.email, res.data.role);
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/dashboard'], {replaceUrl: true});
           }
         },
         error: (err: any) => {

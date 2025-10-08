@@ -1,0 +1,17 @@
+<!-- <h2>Parent Component</h2>
+<app-parent [name]="userName" (messageEvent)="onMessageRecieved($event)"></app-parent>
+
+<p>Recieved from child: {{messageFromChild}}</p> -->
+
+<button (click)="startFirstLoader()" [disabled]="!clickable">Click!!</button>
+
+<p>{{status}}</p>
+
+@if(isFetching()){
+  <app-loader></app-loader>
+}
+
+@if(isFetching2()){
+  <!-- <app-loader></app-loader> -->
+   <app-loader2></app-loader2>
+}

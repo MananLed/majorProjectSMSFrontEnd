@@ -10,7 +10,7 @@ import { TableModule } from 'primeng/table';
 import { ApisService } from '../../../service/apis.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { InputTextModule } from 'primeng/inputtext';
-import { Tooltip } from "primeng/tooltip";
+import { Tooltip } from 'primeng/tooltip';
 import { AuthService } from '../../../service/auth.service';
 
 @Component({
@@ -26,8 +26,8 @@ import { AuthService } from '../../../service/auth.service';
     FloatLabelModule,
     LoaderComponent,
     InputTextModule,
-    Tooltip
-],
+    Tooltip,
+  ],
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.scss',
 })
@@ -39,10 +39,14 @@ export class InvoiceComponent {
 
   invoiceData: any;
 
-  constructor(private route: ActivatedRoute, private api: ApisService, private auth: AuthService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private api: ApisService,
+    private auth: AuthService
+  ) {}
 
-  selectedYear: any;
-  selectedMonth: any;
+  selectedYear: any = null;
+  selectedMonth: any = null;
 
   filteredYears!: any[];
   filteredMonths!: any[];
@@ -60,15 +64,21 @@ export class InvoiceComponent {
     this.filteredYears = this.years.filter((year: any) =>
       year.toString().toLowerCase().includes(query.toLowerCase())
     );
-    this.filteredYears = this.years.map((year:any) => ({ label: year, value: year }));
+    this.filteredYears = this.years.map((year: any) => ({
+      label: year,
+      value: year,
+    }));
   }
 
   filterMonths(event: any) {
     const query = event.query;
-    this.filteredMonths = this.months.filter((month:any) =>
+    this.filteredMonths = this.months.filter((month: any) =>
       month.toString().toLowerCase().includes(query.toLowerCase())
     );
-    this.filteredMonths = this.months.map((month:any) => ({ label: month, value: month }));
+    this.filteredMonths = this.months.map((month: any) => ({
+      label: month,
+      value: month,
+    }));
   }
 
   showDialog() {
@@ -79,13 +89,12 @@ export class InvoiceComponent {
     this.visible = false;
   }
 
-
   ngOnInit() {
-     this.invoiceData = this.route.snapshot.data['invoiceData'];
-     this.userRole = this.auth.getRole();
-      this.isAdmin = this.auth.isAdmin();
-      this.isOfficer = this.auth.isOfficer();
-      this.isResident = this.auth.isResident();
+    this.invoiceData = this.route.snapshot.data['invoiceData'];
+    this.userRole = this.auth.getRole();
+    this.isAdmin = this.auth.isAdmin();
+    this.isOfficer = this.auth.isOfficer();
+    this.isResident = this.auth.isResident();
 
     const yearsSet = new Set<any>();
     const monthsSet = new Set<any>();
@@ -102,8 +111,14 @@ export class InvoiceComponent {
     this.filteredYears = [...this.years];
     this.filteredMonths = [...this.months];
 
-    this.filteredYears = this.years.map((year:any) => ({ label: year, value: year }));
-  this.filteredMonths = this.months.map((month:any) => ({ label: month, value: month }));
+    this.filteredYears = this.years.map((year: any) => ({
+      label: year,
+      value: year,
+    }));
+    this.filteredMonths = this.months.map((month: any) => ({
+      label: month,
+      value: month,
+    }));
   }
 
   fetchInvoices(): void {
@@ -137,5 +152,63 @@ export class InvoiceComponent {
         console.error('Error adding invoice:', err);
       },
     });
+  }
+
+  searchInvoice(): void {
+    if (!this.selectedYear && !this.selectedMonth) {
+      this.isFetching.set(true);
+      this.fetchInvoices();
+      this.isFetching.set(false);
+      return;
+    }
+
+    if (!this.selectedMonth && this.selectedYear) {
+      this.isFetching.set(true);
+      this.api.searchInvoice(null, this.selectedYear).subscribe({
+        next: (res) => {
+          this.invoiceData = res;
+          this.selectedMonth = null;
+          this.selectedYear = null;
+          this.isFetching.set(false);
+        },
+        error: (err) => {
+          console.error('Error searching invoices: ', err);
+          this.selectedMonth = null;
+          this.selectedYear = null;
+          this.isFetching.set(false);
+        },
+      });
+      return;
+    }
+
+    if (this.selectedMonth && this.selectedYear) {
+      this.isFetching.set(true);
+      this.api.searchInvoice(this.selectedMonth, this.selectedYear).subscribe({
+        next: (res) => {
+          console.log(res);
+          console.log(this.selectedMonth);
+          console.log(this.selectedYear);
+          if (res && res.data) {
+            if (!Array.isArray(res.data)) {
+              this.invoiceData = { ...res, data: [res.data] };
+            } else {
+              this.invoiceData = res;
+            }
+          } else {
+            this.invoiceData = { data: [] };
+          }
+          this.selectedMonth = null;
+          this.selectedYear = null;
+          this.isFetching.set(false);
+        },
+        error: (err) => {
+          console.error('Error searching invoices: ', err);
+          this.selectedMonth = null;
+          this.selectedYear = null;
+          this.isFetching.set(false);
+        },
+      });
+      return;
+    }
   }
 }
