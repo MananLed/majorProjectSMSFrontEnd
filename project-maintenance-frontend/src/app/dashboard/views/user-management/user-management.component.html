@@ -35,10 +35,10 @@
         <p-tabpanel value="0">
           <br /><br />
           <p-table
-            *ngIf="residentDetails?.data?.length > 0; else noResidents"
-            [value]="residentDetails.data"
+            *ngIf="residentDetails!.data!.length > 0; else noResidents"
+            [value]="residentDetails!.data"
             [tableStyle]="{ 'min-width': '50rem' }"
-            [paginator]="residentDetails?.data?.length > 5"
+            [paginator]="residentDetails!.data!.length > 5"
             [rows]="5"
             [rowsPerPageOptions]="[5, 10, 20]"
           >
@@ -76,11 +76,14 @@
                 <td>{{ data.email }}</td>
                 <td>{{ data.flat }}</td>
                 <td>
-                  <p-button
+                  <button
+                    class="remove"
+                    pButton
+                    pTooltip="Remove Resident"
                     severity="danger"
                     icon="pi pi-trash"
-                    (onClick)="deleteResident(data.id)"
-                  ></p-button>
+                    (click)="deleteResident(data.id)"
+                  ></button>
                 </td>
               </tr>
             </ng-template>
@@ -92,17 +95,19 @@
 
         <p-tabpanel value="1">
           <div class="addOfficer">
-            <p-button
+            <button
+              pButton
+              class="add-officer-button"
               icon="pi pi-plus"
               pTooltip="Add Officer"
-              (onClick)="showDialog()"
-            />
+              (click)="showDialog()"
+            ></button>
           </div>
           <p-table
-            *ngIf="officerDetails?.data?.length > 0; else noOfficers"
-            [value]="officerDetails.data"
+            *ngIf="officerDetails!.data!.length > 0; else noOfficers"
+            [value]="officerDetails!.data"
             [tableStyle]="{ 'min-width': '50rem' }"
-            [paginator]="officerDetails?.data?.length > 5"
+            [paginator]="officerDetails!.data!.length > 5"
             [rows]="5"
             [rowsPerPageOptions]="[5, 10, 20]"
           >
@@ -133,11 +138,14 @@
                 <td>{{ data.mobile_number }}</td>
                 <td>{{ data.email }}</td>
                 <td>
-                  <p-button
+                  <button
+                    class="remove"
+                    pButton
+                    pTooltip="Remove Officer"
                     severity="danger"
                     icon="pi pi-trash"
-                    (onClick)="deleteOfficer(data.id)"
-                  ></p-button>
+                    (click)="deleteOfficer(data.id)"
+                  ></button>
                 </td>
               </tr>
             </ng-template>
@@ -156,42 +164,82 @@
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '25rem' }"
+  (onHide)="resetAddOfficerForm()"
 >
-  <span class="p-text-secondary block mb-8">Enter the details</span>
-  <br /><br />
-  <p-floatlabel variant="on">
-    <input
-      pInputText
-      type="text"
-      id="email"
-      [(ngModel)]="officerEmail"
-      autocomplete="off"
-    />
-    <label for="email">Email</label>
-  </p-floatlabel>
-  <br />
-  <p-floatlabel variant="on">
-    <input
-      pInputText
-      id="password"
-      [(ngModel)]="officerPassword"
-      autocomplete="off"
-    />
-    <label for="password">Password</label>
-  </p-floatlabel>
-  <br /><br />
-  <div class="buttons">
-    <p-button
-      label="Cancel"
-      severity="contrast"
-      (onClick)="hideDialog()"
-    ></p-button>
-    <p-button
-      [disabled]="!officerEmail || !officerPassword"
-      label="Add"
-      (onClick)="addOfficer()"
-    ></p-button>
-  </div>
+  <form #addOfficerForm="ngForm" (ngSubmit)="addOfficer(addOfficerForm)">
+    <span class="p-text-secondary block mb-8">Enter the details</span>
+    <br /><br />
+    <div class="field-container">
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          type="text"
+          id="email"
+          name="officerEmail"
+          [(ngModel)]="officerEmail"
+          autocomplete="off"
+          required
+          email
+          #officerEmailControl="ngModel"
+        />
+        <label for="email">Email</label>
+      </p-floatlabel>
+      <div class="error-message-box">
+        <span
+          *ngIf="officerEmailControl.invalid && officerEmailControl.dirty"
+          class="error-message"
+        >
+          <span *ngIf="officerEmailControl.errors?.['required']"
+            >Email is required.</span
+          >
+          <span *ngIf="officerEmailControl.errors?.['email']"
+            >Enter a valid email.</span
+          >
+        </span>
+      </div>
+    </div>
+    <br />
+    <div class="field-container">
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          type="password"
+          id="password"
+          name="officerPassword"
+          [(ngModel)]="officerPassword"
+          autocomplete="off"
+          required
+          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{12,}$"
+          #officerPasswordControl="ngModel"
+        />
+        <label for="password">Password</label>
+      </p-floatlabel>
+       <div class="error-message-box">
+        <span
+          *ngIf="officerPasswordControl.invalid && (officerPasswordControl.dirty || officerPasswordControl.touched)"
+          class="error-message"
+        >
+          <span *ngIf="officerPasswordControl.errors?.['required']">Password is required.</span>
+          <span *ngIf="officerPasswordControl.errors?.['pattern']">
+            Password must be at least 12 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character.
+          </span>
+        </span>
+      </div>
+    </div>
+    <br /><br />
+    <div class="buttons">
+      <p-button
+        label="Cancel"
+        severity="contrast"
+        (onClick)="hideDialog()"
+      ></p-button>
+      <p-button
+        [disabled]="addOfficerForm.invalid"
+        label="Add"
+        type="submit"
+      ></p-button>
+    </div>
+  </form>
 </p-dialog>
 
 @if (isFetching()) {

@@ -123,10 +123,14 @@
           <div class="app">
             {{ data.status | uppercase }}
           </div>
-          }@else{
+          }@else if(data.status === 'pending'){
           <div class="pen">
             {{ data.status | uppercase }}
           </div>
+          }@else{
+            <div class="comp">
+              {{data.status | uppercase }}
+            </div>
           }
         </td>
         <td>{{ data.time_slot }}</td>
@@ -134,24 +138,31 @@
         @if (isResident) {
         <td>
           <div class="actions">
-            <p-button
-              pTooltip="Reschedule Request"
-              icon="pi pi-stopwatch"
-              (onClick)="
-                showRescheduleRequestDialog(data.service_type, data.request_id)
-              "
-              [disabled]="data.status === 'approved'"
-            ></p-button>
-            <p-button
-              pTooltip="Cancel Request"
-              icon="pi pi-trash"
-              severity="danger"
-              [disabled]="data.status === 'approved'"
-              (onClick)="deleteRequest(data.request_id)"
-            ></p-button>
+            @if(data.status === 'pending' || data.status === 'approved'){
+              <p-button
+                pTooltip="Reschedule Request"
+                icon="pi pi-stopwatch"
+                (onClick)="
+                  showRescheduleRequestDialog(data.service_type, data.request_id)
+                "
+                [disabled]="data.status === 'approved'"
+              ></p-button>
+              <p-button
+                pTooltip="Cancel Request"
+                icon="pi pi-trash"
+                severity="danger"
+                [disabled]="data.status === 'approved'"
+                (onClick)="deleteRequest(data.request_id)"
+              ></p-button>
+            }@else if(data.status === 'completed'){
+              <p-button
+                pTooltip="Give Feedback"
+                icon="pi pi-pencil"
+              ></p-button>
+            }
           </div>
         </td>
-        }@else {
+        }@else if(data.status === 'pending') {
         <td>
           <p-button
             pTooltip="Approve Request"
@@ -160,6 +171,14 @@
             (onClick)="approveRequest(data.request_id)"
           ></p-button>
         </td>
+        }@else {
+          <td>
+          <p-button
+            pTooltip="Mark as Complete"
+            icon="pi pi-check-circle"
+            [disabled]="data.status === 'completed'"
+          ></p-button>
+          </td>
         }
       </tr>
     </ng-template>
@@ -223,7 +242,7 @@
   header="Reschedule Service Request"
   [(visible)]="displayRescheduleRequestDialog"
   [modal]="true"
-  [style]="{ width: '25rem', height: '25rem' }"
+  [style]="{ width: '25rem', height: '16rem' }"
 >
   <p-autocomplete
     [(ngModel)]="selectedReTimeSlot"
@@ -232,6 +251,7 @@
     dropdown="true"
     optionLabel="label"
     placeholder="Select a Time Slot"
+    scrollHeight="78px"
     forceSelection="true"
     (onDropdownClick)="fetchAvailableTimeSlots(selectedReServiceType)"
     (onSelect)="onTimeSlotSelect($event)"

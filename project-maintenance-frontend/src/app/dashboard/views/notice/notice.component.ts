@@ -1,15 +1,19 @@
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+
 import { AutoComplete } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
+import { Tooltip } from 'primeng/tooltip';
+
 import { ApisService } from '../../../service/apis.service';
 import { LoaderComponent } from '../loader/loader.component';
-import { Tooltip } from 'primeng/tooltip';
 import { AuthService } from '../../../service/auth.service';
+import { NoticeSuccessResponse } from '../../../interface/notice.model';
+import { Constants } from '../../../shared/constants';
 
 @Component({
   selector: 'app-notice',
@@ -23,12 +27,13 @@ import { AuthService } from '../../../service/auth.service';
     DialogModule,
     LoaderComponent,
     Tooltip,
+    CommonModule,
   ],
   templateUrl: './notice.component.html',
   styleUrl: './notice.component.scss',
 })
 export class NoticeComponent implements OnInit {
-  societyNotices: any;
+  societyNotices!: NoticeSuccessResponse;
   isFetching = signal(false);
   content!: string;
   visible: boolean = false;
@@ -36,6 +41,8 @@ export class NoticeComponent implements OnInit {
   isAdmin: boolean = false;
   isOfficer: boolean = false;
   isResident: boolean = false;
+
+  readonly constants = Constants;
 
   selectedItem: any;
 
@@ -79,6 +86,7 @@ export class NoticeComponent implements OnInit {
 
   ngOnInit(): void {
     this.societyNotices = this.route.snapshot.data['societyNotices'];
+    console.log(this.societyNotices);
     this.userRole = this.auth.getRole();
     this.isAdmin = this.auth.isAdmin();
     this.isOfficer = this.auth.isOfficer();
@@ -118,11 +126,11 @@ export class NoticeComponent implements OnInit {
 
   fetchNotices(): void {
     this.api.getNotices().subscribe({
-      next: (res) => {
+      next: (res: NoticeSuccessResponse) => {
         this.societyNotices = res;
       },
       error: (err) => {
-        console.error('Error fetching notices:', err);
+        console.error(this.constants.errorFetchingNotices, err);
       },
     });
   }
@@ -145,7 +153,7 @@ export class NoticeComponent implements OnInit {
           this.isFetching.set(false);
         },
         error: (err) => {
-          console.error('Error searching notices: ', err);
+          console.error(this.constants.errorSearchingNotices, err);
           this.selectedMonth = null;
           this.selectedYear = null;
           this.isFetching.set(false);
@@ -167,7 +175,7 @@ export class NoticeComponent implements OnInit {
           this.isFetching.set(false);
         },
         error: (err) => {
-          console.error('Error searching notices: ', err);
+          console.error(this.constants.errorFetchingNotices, err);
           this.selectedMonth = null;
           this.selectedYear = null;
           this.isFetching.set(false);
@@ -194,7 +202,7 @@ export class NoticeComponent implements OnInit {
       },
       error: (err) => {
         this.isFetching.set(false);
-        console.error('Error adding notice:', err);
+        console.error(this.constants.errorAddingNotices, err);
       },
     });
   }

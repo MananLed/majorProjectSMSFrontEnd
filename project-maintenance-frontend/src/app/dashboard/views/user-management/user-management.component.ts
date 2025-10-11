@@ -1,134 +1,173 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+
+import { Avatar } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
+import { FloatLabel, FloatLabelModule } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
+import { Tooltip } from 'primeng/tooltip';
+
 import { LoaderComponent } from '../loader/loader.component';
-import { FloatLabel, FloatLabelModule } from 'primeng/floatlabel';
-import { FormsModule } from '@angular/forms';
 import { ApisService } from '../../../service/apis.service';
-import { InputTextModule } from 'primeng/inputtext';
-import { Tooltip } from "primeng/tooltip";
-import { Avatar } from "primeng/avatar";
+import {
+  SocietyData,
+  UserListSuccessResponse,
+} from '../../../interface/user.model';
+import { Constants } from '../../../shared/constants';
 
 @Component({
   selector: 'app-user-management',
-  imports: [CardModule, TabsModule, TableModule, ButtonModule, NgIf, NgFor, DialogModule, LoaderComponent, FormsModule, FloatLabel, FloatLabelModule, InputTextModule, Tooltip, Avatar],
+  imports: [
+    CardModule,
+    TabsModule,
+    TableModule,
+    ButtonModule,
+    NgIf,
+    DialogModule,
+    LoaderComponent,
+    FormsModule,
+    FloatLabel,
+    FloatLabelModule,
+    InputTextModule,
+    Tooltip,
+    Avatar,
+  ],
   templateUrl: './user-management.component.html',
-  styleUrl: './user-management.component.scss'
+  styleUrl: './user-management.component.scss',
 })
 export class UserManagementComponent implements OnInit {
+  @ViewChild('addOfficerForm') addOfficerForm?: NgForm;
 
-  visible: boolean = false;
   isFetching = signal(false);
 
-  residentDetails: any;
-  officerDetails: any;
+  visible: boolean = false;
 
-  noOfResidents!: number;
-  noOfOfficers!: number;
+  residentDetails?: UserListSuccessResponse;
+  officerDetails?: UserListSuccessResponse;
+
+  noOfResidents: number = 0;
+  noOfOfficers: number = 0;
 
   officerEmail: string = '';
   officerPassword: string = '';
 
+  readonly constants = Constants;
+
   constructor(private route: ActivatedRoute, private api: ApisService) {}
 
-  ngOnInit(): void{
-    const societyData = this.route.snapshot.data['societyData'];
-    this.residentDetails = societyData.residentDetails;
-    this.officerDetails = societyData.officerDetails;
+  ngOnInit(): void {
+    const societyData = this.route.snapshot.data['societyData'] as SocietyData;
+    if (societyData.residentDetails.status === 'Success') {
+      this.residentDetails = societyData.residentDetails;
+      this.noOfResidents = this.residentDetails.data.length;
+    } else {
+      console.error(
+        this.constants.errorResidentDetailFetch,
+        societyData.residentDetails.message
+      );
+    }
 
-    console.log('Resident details: ', this.residentDetails);
-    console.log('Officer Details: ', this.officerDetails);
-
-    this.noOfResidents = this.residentDetails.data.length;
-    this.noOfOfficers = this.officerDetails.data.length;
+    if (societyData.officerDetails.status === 'Success') {
+      this.officerDetails = societyData.officerDetails;
+      this.noOfOfficers = this.officerDetails.data.length;
+    } else {
+      console.error(
+        this.constants.errorOfficerDetailFetch,
+        societyData.officerDetails.message
+      );
+    }
   }
 
-  showDialog() {
-        this.visible = true;
-    }
+  resetAddOfficerForm(): void {
+    this.addOfficerForm?.resetForm();
+    this.officerEmail = '';
+    this.officerPassword = '';
+  }
 
-    hideDialog(){
-      this.visible = false;
-    }
+  showDialog(): void {
+    this.visible = true;
+  }
 
-    fetchOfficers(): void {
-      this.api.getOfficers().subscribe({
-        next: (res) => {
-          this.officerDetails = res;
-          this.noOfOfficers = res.data.length;
-        },
-        error: (err) => {
-          console.error('Error fetching the details of officers:', err);
-        }
-      });
-    }
+  hideDialog(): void {
+    this.visible = false;
+    this.addOfficerForm?.resetForm();
+  }
 
-    fetchResidents(): void{
-      this.api.getResidents().subscribe({
-        next: (res) => {
-          this.residentDetails = res;
-          this.noOfResidents = res.data.length;
-        },
-        error: (err) => {
-          console.error('Error fetching the details of residents:', err);
-        }
-      });
-    }
+  fetchOfficers(): void {
+    this.api.getOfficers().subscribe({
+      next: (res: UserListSuccessResponse) => {
+        this.officerDetails = res;
+        this.noOfOfficers = res.data.length;
+      },
+      error: (err) => {
+        console.error(this.constants.errorOfficerDetailFetch, err);
+      },
+    });
+  }
 
-    addOfficer(): void{
+  fetchResidents(): void {
+    this.api.getResidents().subscribe({
+      next: (res: UserListSuccessResponse) => {
+        this.residentDetails = res;
+        this.noOfResidents = res.data.length;
+      },
+      error: (err) => {
+        console.error(this.constants.errorResidentDetailFetch, err);
+      },
+    });
+  }
+
+  addOfficer(form: NgForm): void {
+    if (form.valid) {
       this.isFetching.set(true);
 
-      if(this.officerEmail === '' || this.officerPassword === ''){
-        this.isFetching.set(false);
-        return;
-      }
-      
-      this.api.putOfficer({email: this.officerEmail, password: this.officerPassword}).subscribe({
+      this.api.putOfficer({ email: this.officerEmail, password: this.officerPassword }).subscribe({
         next: (res) => {
           this.fetchOfficers();
           this.visible = false;
-          this.officerEmail = '';
-          this.officerPassword = '';
+          this.resetAddOfficerForm();
           this.isFetching.set(false);
         },
         error: (err) => {
           this.isFetching.set(false);
-          console.error('Error adding officer to the system:', err);
+          console.error(this.constants.errorAddOfficer, err);
         }
       });
-
     }
+  }
 
-    deleteResident(residentID: any){
-      this.isFetching.set(true);
-        this.api.deleteResident(residentID).subscribe({
-            next: (res) => {
-              this.fetchResidents();
-              this.isFetching.set(false);
-            },
-            error: (err) => {
-              this.isFetching.set(false);
-              console.error('Error deleting resident:', err);
-            }
-        });
-    }
+  deleteResident(residentID: string): void {
+    this.isFetching.set(true);
+    console.log(residentID);
+    this.api.deleteResident(residentID).subscribe({
+      next: (res) => {
+        this.fetchResidents();
+        this.isFetching.set(false);
+      },
+      error: (err) => {
+        this.isFetching.set(false);
+        console.error(this.constants.errorDeleteResident, err);
+      },
+    });
+  }
 
-    deleteOfficer(officerID: any){
-      this.isFetching.set(true);
-      this.api.deleteOfficer(officerID).subscribe({
-          next: (res) => {
-            this.fetchOfficers();
-            this.isFetching.set(false);
-          },
-          error: (err) => {
-            this.isFetching.set(false);
-            console.error('Error deleting officer:', err);
-          }
-      });
-    }
+  deleteOfficer(officerID: string): void {
+    this.isFetching.set(true);
+    this.api.deleteOfficer(officerID).subscribe({
+      next: (res) => {
+        this.fetchOfficers();
+        this.isFetching.set(false);
+      },
+      error: (err) => {
+        this.isFetching.set(false);
+        console.error(this.constants.errorDeleteOfficer, err);
+      },
+    });
+  }
 }

@@ -21,7 +21,7 @@
       (completeMethod)="filterYears($event)"
       optionLabel="label"
       [dropdown]="true"
-      scrollHeight="78px"
+      scrollHeight="39px"
       placeholder="Select Year"
       [forceSelection]="true"
     />
@@ -37,10 +37,10 @@
 
 <div class="card">
   <p-table
-    *ngIf="invoiceData?.data?.length > 0; else noInvoice"
-    [value]="invoiceData.data"
+    *ngIf="invoiceData!.data!.length > 0; else noInvoice"
+    [value]="invoiceData!.data"
     [tableStyle]="{ 'min-width': '60rem' }"
-    [paginator]="invoiceData?.data?.length > 5"
+    [paginator]="invoiceData!.data!.length > 5"
     [rows]="5"
     [rowsPerPageOptions]="[5,10,20]"
   >
@@ -84,11 +84,12 @@
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '25rem' }"
+  (onHide)="resetDialog()"
 >
   <span class="p-text-secondary block mb-8">Enter the Amount</span>
   <br /><br />
   <p-floatlabel variant="on">
-    <input pInputText id="amount" [(ngModel)]="amount" autocomplete="off" />
+    <input pInputText id="amount" [(ngModel)]="amount" autocomplete="off" type="number" min="0" oninput="validity.valid||(value='');"/>
     <label for="amount">Amount</label>
   </p-floatlabel>
   <br /><br />

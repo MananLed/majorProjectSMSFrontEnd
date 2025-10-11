@@ -2,17 +2,20 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+
 import { AutoComplete } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
-import { AuthService } from '../../../service/auth.service';
-import { ActivatedRoute } from '@angular/router';
 import { Avatar } from 'primeng/avatar';
-import { DialogModule } from 'primeng/dialog';
+import { SelectItem } from 'primeng/select';
+
+import { AuthService } from '../../../service/auth.service';
 import { ApisService } from '../../../service/apis.service';
 import { LoaderComponent } from '../loader/loader.component';
-import { SelectItem } from 'primeng/select';
+import { Constants } from '../../../shared/constants';
 
 @Component({
   selector: 'app-service-requests',
@@ -57,6 +60,10 @@ export class ServiceRequestsComponent {
   allTimeSlots: SelectItem[] = [];
   selectedReServiceType: any | null;
   selectedReServiceID: any | null;
+  completedRequestData: any;
+  completedRequestCount: any;
+
+  private readonly constants = Constants;
 
   constructor(
     private auth: AuthService,
@@ -71,30 +78,41 @@ export class ServiceRequestsComponent {
   private allStatuses = [
     { label: 'Pending', value: 'Pending' },
     { label: 'Approved', value: 'Approved' },
+    { label: 'Completed', value: 'Completed'},
   ];
   ngOnInit() {
     const requestData = this.route.snapshot.data['requestData'];
+
+    console.log(requestData);
 
     console.log(requestData);
     this.pendingRequestCount =
       requestData.data.Pending === null ? 0 : requestData.data.Pending.length;
     this.approvedRequestCount =
       requestData.data.Approved === null ? 0 : requestData.data.Approved.length;
-    this.totalRequestCount =
-      this.pendingRequestCount + this.approvedRequestCount;
+      this.completedRequestCount = requestData.data.Completed === null ? 0 : requestData.data.Completed.length;
+      this.totalRequestCount =
+        this.pendingRequestCount + this.approvedRequestCount + this.completedRequestCount;
 
     console.log(this.pendingRequestCount);
     console.log(this.approvedRequestCount);
+    console.log(this.completedRequestCount);
     console.log(this.totalRequestCount);
 
     this.pendingRequestData = requestData.data.Pending || [];
     this.approvedRequestData = requestData.data.Approved || [];
+    this.completedRequestData = requestData.data.Completed || [];
     this.allRequestData = this.pendingRequestData.concat(
       this.approvedRequestData
     );
 
+    this.allRequestData = this.allRequestData.concat(
+      this.completedRequestData
+    );
+
     console.log(this.pendingRequestData);
     console.log(this.approvedRequestData);
+    console.log(this.completedRequestData);
     console.log(this.allRequestData);
 
     this.filteredService = this.allServices;
@@ -105,21 +123,21 @@ export class ServiceRequestsComponent {
     this.isResident = this.auth.isResident();
   }
 
-  filterStatus(event: any) {
+  filterStatus(event: any): void {
     const query = event.query.toLowerCase();
     this.filteredStatus = this.allStatuses.filter((status) =>
       status.label.toLowerCase().includes(query)
     );
   }
 
-  filterService(event: any) {
+  filterService(event: any): void {
     const query = event.query.toLowerCase();
     this.filteredService = this.allServices.filter((service) =>
       service.label.toLowerCase().includes(query)
     );
   }
 
-  onTimeSlotSelect(event: any) {
+  onTimeSlotSelect(event: any): void {
     const selectedItem = event.value;
     console.log(this.fetchedTimeSlots);
     this.selectedTimeSlotIndex = this.fetchedTimeSlots.data.findIndex(
@@ -180,7 +198,7 @@ export class ServiceRequestsComponent {
         },
         error: (err) => {
           this.isFetching.set(false);
-          console.error('Error rescheduling request:', err);
+          console.error(this.constants.errorReschedulingRequests, err);
         },
       });
   }
@@ -216,7 +234,7 @@ export class ServiceRequestsComponent {
         console.log(this.allRequestData);
       },
       error: (err) => {
-        console.error('Error fetching the requests of resident:', err);
+        console.error(this.constants.errorFetchingRequestOfResident, err);
       },
     });
   }
@@ -230,7 +248,7 @@ export class ServiceRequestsComponent {
       },
       error: (err) => {
         this.isFetching.set(false);
-        console.error('Error fetching all requests:', err);
+        console.error(this.constants.errorFetchingAllRequests, err);
       },
     });
   }
@@ -244,7 +262,7 @@ export class ServiceRequestsComponent {
       },
       error: (err) => {
         this.isFetching.set(false);
-        console.error('Error in deleting service request:', err);
+        console.error(this.constants.errorDeleteRequest, err);
       },
     });
   }
@@ -287,20 +305,20 @@ export class ServiceRequestsComponent {
         console.log(this.allRequestData);
       },
       error: (err) => {
-        console.error('Error fetching the requests of resident:', err);
+        console.error(this.constants.errorFetchingRequestOfResident, err);
       },
     });
   }
 
   submitAddRequest() {
-    if (!this.selectedServiceType || !this.selectedTimeSlotIndex) {
+    if (!this.selectedServiceType || !(this.selectedTimeSlotIndex + 1)) {
       return;
     }
 
     this.isFetching.set(true);
     this.api
       .putRequest({
-        servicetype: String(this.selectedServiceType),
+        servicetype: String(this.selectedServiceType.toLowerCase()),
         slotid: Number(this.selectedTimeSlotIndex) + 1,
       })
       .subscribe({
@@ -315,7 +333,7 @@ export class ServiceRequestsComponent {
         },
         error: (err) => {
           this.isFetching.set(false);
-          console.error('Error adding request:', err);
+          console.error(this.constants.errorAddingRequest, err);
         },
       });
   }
@@ -325,7 +343,7 @@ export class ServiceRequestsComponent {
       return;
     }
     this.isFetching.set(true);
-    this.api.getAvailableTimeSlots(serviceType).subscribe({
+    this.api.getAvailableTimeSlots(serviceType.toLowerCase()).subscribe({
       next: (res) => {
         console.log(res);
         this.fetchedTimeSlots = res;
@@ -339,7 +357,7 @@ export class ServiceRequestsComponent {
       },
       error: (err) => {
         this.isFetching.set(false);
-        console.error('Error occured while fetching the time slots: ', err);
+        console.error(this.constants.errorFetchingTimeSlots, err);
       },
     });
   }
@@ -372,7 +390,7 @@ export class ServiceRequestsComponent {
             this.isFetching.set(false);
           },
           error: (err) => {
-            console.log('Error in searching requests:', err);
+            console.log(this.constants.errorSearchingRequests, err);
             this.selectedService = null;
             this.selectedStatus = null;
             this.isFetching.set(false);

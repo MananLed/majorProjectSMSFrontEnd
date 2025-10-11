@@ -1,14 +1,20 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Route, Router } from '@angular/router';
+
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { LoaderComponent } from '../loader/loader.component';
-import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { ApisService } from '../../../service/apis.service';
+import { InputTextModule } from 'primeng/inputtext';
+import { LoaderComponent } from '../loader/loader.component';
 import { Tooltip } from 'primeng/tooltip';
+import { MessagesModule } from 'primeng/messages';
+import { Message, MessageModule } from 'primeng/message';
+
+import { ApisService } from '../../../service/apis.service';
 import { AuthService } from '../../../service/auth.service';
+import { ProfileResponse, ProfileSuccessResponse } from '../../../interface/profile.model';
+import { Constants } from '../../../shared/constants';
 
 @Component({
   selector: 'app-profile',
@@ -20,55 +26,75 @@ import { AuthService } from '../../../service/auth.service';
     InputTextModule,
     FloatLabelModule,
     Tooltip,
+    MessageModule,
+    Message,
+    MessagesModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
-  userDetails!: any;
+  
+  userDetails?: ProfileResponse;
+  @ViewChild('updateProfileForm') updateProfileForm?: NgForm;
+  @ViewChild('changePasswordForm') changePasswordForm?: NgForm;
+
   isFetching = signal(false);
+
   visible: boolean = false;
   visibleChangePassword: boolean = false;
   visibleDeleteProfile: boolean = false;
 
-  firstname: any = '';
-  middlename: any = '';
-  lastname: any = '';
-  mobile: any = '';
-  email: any = '';
+  firstname: string = '';
+  middlename: string = '';
+  lastname: string = '';
+  mobile: string = '';
+  email: string = '';
+  oldpassword: string = '';
+  newpassword: string = '';
+  confirmpassword: string = '';
+  
+  readonly constants = Constants;
 
-  oldpassword: any = '';
-  newpassword: any = '';
-  confirmpassword: any = '';
-
-  constructor(private route: ActivatedRoute, private api: ApisService, private routes: Router, private auth: AuthService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private api: ApisService,
+    private routes: Router,
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.userDetails = this.route.snapshot.data['userData'];
+    const userData = this.route.snapshot.data['userData'];
     console.log(this.userDetails);
+    if (userData && userData.status === 'Success') {
+      this.userDetails = userData as ProfileSuccessResponse;
+    }
   }
 
-  showDialog() {
+  showDialog(): void {
     this.visible = true;
   }
 
-  hideDialog() {
+  hideDialog(): void {
     this.visible = false;
+
+    this.updateProfileForm?.resetForm();
   }
 
-  showDialogChangePassword() {
+  showDialogChangePassword(): void {
     this.visibleChangePassword = true;
   }
 
-  hideDialogChangePassword() {
+  hideDialogChangePassword(): void {
     this.visibleChangePassword = false;
+    this.changePasswordForm?.resetForm();
   }
 
-  showDialogDeleteProfile(){
+  showDialogDeleteProfile(): void {
     this.visibleDeleteProfile = true;
   }
 
-  hideDialogDeleteProfile(){
+  hideDialogDeleteProfile(): void {
     this.visibleDeleteProfile = false;
   }
 
@@ -78,7 +104,7 @@ export class ProfileComponent implements OnInit {
         this.userDetails = res;
       },
       error: (err) => {
-        console.error('Error fetching the profile details:', err);
+        console.error(this.constants.errorProfileFetch, err);
       },
     });
   }
@@ -118,14 +144,13 @@ export class ProfileComponent implements OnInit {
         },
         error: (err) => {
           this.isFetching.set(false);
-          console.error('Error updating the profile: ', err);
+          console.error(this.constants.errorProfileUpdate, err);
         },
       });
   }
 
-  updatePassword() {
-
-    if(this.newpassword !== this.confirmpassword){
+  updatePassword(): void {
+    if (this.newpassword !== this.confirmpassword) {
       return;
     }
 
@@ -152,12 +177,12 @@ export class ProfileComponent implements OnInit {
         },
         error: (err) => {
           this.isFetching.set(false);
-          console.error('Error updating the password: ', err);
+          console.error(this.constants.errorPasswordUpdate, err);
         },
       });
   }
 
-  deleteProfile():void{
+  deleteProfile(): void {
     this.isFetching.set(true);
     this.api.deleteProfile().subscribe({
       next: (res) => {
@@ -167,8 +192,8 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         this.isFetching.set(false);
-        console.error('Error deleting profile:', err);
-      }
+        console.error(this.constants.errorDeletingProfile, err);
+      },
     });
   }
 }

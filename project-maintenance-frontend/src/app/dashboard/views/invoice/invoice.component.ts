@@ -1,17 +1,23 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+
 import { AutoComplete } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputMaskModule } from 'primeng/inputmask';
+import { InputTextModule } from 'primeng/inputtext';
+import { Message } from 'primeng/message';
 import { TableModule } from 'primeng/table';
+import { Tooltip } from 'primeng/tooltip';
+
 import { ApisService } from '../../../service/apis.service';
 import { LoaderComponent } from '../loader/loader.component';
-import { InputTextModule } from 'primeng/inputtext';
-import { Tooltip } from 'primeng/tooltip';
 import { AuthService } from '../../../service/auth.service';
+import { InvoiceSuccessResponse } from '../../../interface/invoice.model';
+import { Constants } from '../../../shared/constants';
 
 @Component({
   selector: 'app-invoice',
@@ -21,12 +27,13 @@ import { AuthService } from '../../../service/auth.service';
     FormsModule,
     TableModule,
     NgIf,
-    NgFor,
     DialogModule,
     FloatLabelModule,
     LoaderComponent,
     InputTextModule,
     Tooltip,
+    InputMaskModule,
+    Message
   ],
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.scss',
@@ -35,9 +42,11 @@ export class InvoiceComponent {
   isFetching = signal(false);
 
   visible: boolean = false;
-  amount!: string;
+  amount?: number | null;
 
-  invoiceData: any;
+  readonly constants = Constants;
+
+  invoiceData!: InvoiceSuccessResponse;
 
   constructor(
     private route: ActivatedRoute,
@@ -59,7 +68,7 @@ export class InvoiceComponent {
   isOfficer: boolean = false;
   isResident: boolean = false;
 
-  filterYears(event: any) {
+  filterYears(event: any): void {
     const query = event.query;
     this.filteredYears = this.years.filter((year: any) =>
       year.toString().toLowerCase().includes(query.toLowerCase())
@@ -70,7 +79,7 @@ export class InvoiceComponent {
     }));
   }
 
-  filterMonths(event: any) {
+  filterMonths(event: any): void {
     const query = event.query;
     this.filteredMonths = this.months.filter((month: any) =>
       month.toString().toLowerCase().includes(query.toLowerCase())
@@ -81,20 +90,22 @@ export class InvoiceComponent {
     }));
   }
 
-  showDialog() {
+  showDialog(): void {
     this.visible = true;
   }
 
-  hideDialog() {
+  hideDialog(): void {
     this.visible = false;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.invoiceData = this.route.snapshot.data['invoiceData'];
     this.userRole = this.auth.getRole();
     this.isAdmin = this.auth.isAdmin();
     this.isOfficer = this.auth.isOfficer();
     this.isResident = this.auth.isResident();
+
+    console.log(this.invoiceData);
 
     const yearsSet = new Set<any>();
     const monthsSet = new Set<any>();
@@ -121,13 +132,17 @@ export class InvoiceComponent {
     }));
   }
 
+  resetDialog(): void{
+    this.amount = null;
+  }
+
   fetchInvoices(): void {
     this.api.getInvoices().subscribe({
       next: (res) => {
         this.invoiceData = res;
       },
       error: (err) => {
-        console.error('Error fetching invoices:', err);
+        console.error(this.constants.errorFetchingInvoices, err);
       },
     });
   }
@@ -141,15 +156,15 @@ export class InvoiceComponent {
     }
 
     this.api.putInvoice({ amount: Number(this.amount) }).subscribe({
-      next: (res) => {
+      next: (res: InvoiceSuccessResponse) => {
         this.fetchInvoices();
         this.visible = false;
-        this.amount = '';
+        this.amount = null;
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
-        console.error('Error adding invoice:', err);
+        console.error(this.constants.errorAddingInvoice, err);
       },
     });
   }
@@ -172,7 +187,7 @@ export class InvoiceComponent {
           this.isFetching.set(false);
         },
         error: (err) => {
-          console.error('Error searching invoices: ', err);
+          console.error(this.constants.errorSearchingInvoice, err);
           this.selectedMonth = null;
           this.selectedYear = null;
           this.isFetching.set(false);
@@ -195,17 +210,18 @@ export class InvoiceComponent {
               this.invoiceData = res;
             }
           } else {
-            this.invoiceData = { data: [] };
+            this.invoiceData = { status: 'Success', message: '', data: [] };
           }
           this.selectedMonth = null;
           this.selectedYear = null;
           this.isFetching.set(false);
         },
         error: (err) => {
-          console.error('Error searching invoices: ', err);
+          console.error(this.constants.errorSearchingInvoice, err);
           this.selectedMonth = null;
           this.selectedYear = null;
           this.isFetching.set(false);
+          this.invoiceData = { status: 'Success', message: '', data: [] };
         },
       });
       return;

@@ -40,3 +40,19 @@
     height: 40px;
     border-radius: $curve;
 }
+
+.search{
+    width: 35px;
+    height: 30px;
+    border-radius: $curve;
+    background-color: transparent;
+    color: #075985;
+    border: 2px solid #075985;
+    transition: all 0.3s ease;
+}
+
+.search:hover{
+    background-color: #075985;
+    color: white;
+}
+

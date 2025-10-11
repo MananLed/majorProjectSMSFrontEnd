@@ -1,17 +1,19 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-// import { NgIf } from "../../../../../node_modules/@angular/common/common_module.d-NEF7UaHr";
-import { NgIf } from '@angular/common';
-import { NgFor } from '@angular/common';
 import { Tooltip } from 'primeng/tooltip';
-import { AuthService } from '../../../service/auth.service';
 import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { FormsModule } from '@angular/forms';
+
+import { AuthService } from '../../../service/auth.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { ApisService } from '../../../service/apis.service';
+import { FeedbackSuccessResponse } from '../../../interface/feedback.model';
+import { Constants } from '../../../shared/constants';
 
 @Component({
   selector: 'app-feedback',
@@ -19,7 +21,6 @@ import { ApisService } from '../../../service/apis.service';
     TableModule,
     ButtonModule,
     NgIf,
-    NgFor,
     Tooltip,
     DialogModule,
     AutoCompleteModule,
@@ -30,7 +31,7 @@ import { ApisService } from '../../../service/apis.service';
   styleUrl: './feedback.component.scss',
 })
 export class FeedbackComponent implements OnInit {
-  userFeedback: any;
+  userFeedback?: FeedbackSuccessResponse;
   userRole: string | null = null;
   isAdmin: boolean = false;
   isOfficer: boolean = false;
@@ -39,6 +40,8 @@ export class FeedbackComponent implements OnInit {
   content!: string;
   rating!: number;
   filteredRatings!: any[];
+
+  readonly constants = Constants;
 
   constructor(private route: ActivatedRoute, private auth: AuthService, private api:ApisService) {}
 
@@ -60,7 +63,7 @@ export class FeedbackComponent implements OnInit {
     this.filteredRatings = this.allRatings;
   }
 
-  filterRating(event: any) {
+  filterRating(event: any): void {
     const query = event.query;
     this.filteredRatings = this.allRatings.filter((rating) =>
       rating.label.toString().includes(query)
@@ -73,7 +76,7 @@ export class FeedbackComponent implements OnInit {
         this.userFeedback = res;
       },
       error: (err) => {
-        console.error('Error fetching feedbacks:', err);
+        console.error(this.constants.errorFetchingFeedbacks, err);
       },
     });
   }
@@ -92,7 +95,7 @@ export class FeedbackComponent implements OnInit {
       },
       error: (err) => {
         this.isFetching.set(false);
-        console.error('Error adding feedback:', err);
+        console.error(this.constants.errorAddingFeedbacks, err);
       },
     });
   }
